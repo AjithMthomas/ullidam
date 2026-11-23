@@ -1,0 +1,57 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# Dependencies
+node_modules/
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# Testing & Coverage
+coverage/
+*.lcov
+.nyc_output
+
+# Next.js Build & Cache
+.next/
+out/
+build/
+dist/
+
+# Turbopack & Tool Caches
+.turbo/
+.impeccable/
+.taste-skill/
+.claude/
+
+# Misc & OS files
+.DS_Store
+*.pem
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+*.log
+
+# Environment files
+.env
+.env*.local
+.env.production
+.env.development
+!.env.example
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
