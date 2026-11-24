@@ -70,9 +70,20 @@ export default function DiasporaPage() {
             <p className="mt-6 max-w-xl text-lead text-pretty text-ink-2">
               Online counselling in Malayalam for Malayalis living abroad. Tell us when you are free, and we will find a time.
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <DiasporaWhatsAppButton />
-              <a href="#how" className={buttonStyles({ variant: "secondary", size: "lg" })}>
+            {/* One line on every phone: compact buttons and a shorter label below sm. */}
+            <div className="mt-8 flex items-center gap-2 sm:gap-3">
+              <DiasporaWhatsAppButton className="h-12 px-5 text-[0.9375rem] sm:h-14 sm:px-8 sm:text-base">
+                <span className="sm:hidden">WhatsApp us</span>
+                <span className="hidden sm:inline">Message us on WhatsApp</span>
+              </DiasporaWhatsAppButton>
+              <a
+                href="#how"
+                className={buttonStyles({
+                  variant: "secondary",
+                  size: "lg",
+                  className: "h-12 px-5 text-[0.9375rem] sm:h-14 sm:px-8 sm:text-base",
+                })}
+              >
                 How it works
               </a>
             </div>

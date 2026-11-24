@@ -34,11 +34,12 @@ export function FloatingWhatsApp() {
     <nav
       aria-label="Contact and social links"
       className={cn(
-        "fixed top-1/2 right-0 z-40 -translate-y-1/2 overflow-hidden rounded-l-2xl shadow-card ring-1 backdrop-blur-md transition-[background-color,box-shadow] duration-500 ease-calm",
+        "fixed top-1/2 right-0 z-40 -translate-y-1/2 overflow-hidden rounded-l-xl shadow-card sm:rounded-l-2xl ring-1 backdrop-blur-md transition-[background-color,box-shadow] duration-500 ease-calm",
         past ? "bg-surface-raised/90 ring-line" : "bg-brand/90 ring-on-brand/15",
       )}
     >
-      <ul className="flex flex-col py-1">
+      {/* Phones: a smaller rail (36 px links) at the user's request; 44 px from the sm breakpoint up. */}
+      <ul className="flex flex-col py-0.5 sm:py-1">
         {links.map(({ key, label, href, Icon }) => (
           <li key={key}>
             <a
@@ -47,14 +48,14 @@ export function FloatingWhatsApp() {
               rel="noopener noreferrer"
               aria-label={`${label} (opens in a new tab)`}
               className={cn(
-                "grid size-11 place-items-center transition-[color,background-color,transform] duration-300 ease-calm",
+                "grid size-9 place-items-center transition-[color,background-color,transform] duration-300 ease-calm sm:size-11",
                 "focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-accent motion-safe:hover:scale-110",
                 past
                   ? cn("hover:bg-canvas-muted", key === "whatsapp" ? "text-whatsapp" : "text-ink-1")
                   : "text-on-brand hover:bg-on-brand/10",
               )}
             >
-              <Icon className={key === "whatsapp" ? "size-[1.1875rem]" : "size-[1.0625rem]"} />
+              <Icon className={key === "whatsapp" ? "size-4 sm:size-[1.1875rem]" : "size-3.5 sm:size-[1.0625rem]"} />
             </a>
           </li>
         ))}
