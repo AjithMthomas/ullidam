@@ -31,6 +31,8 @@ const nextConfig = {
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],
+    // 85 for the homepage opening (clarity on large and high-density screens), 60 for faint decoration.
+    qualities: [60, 75, 85],
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com", port: "", pathname: "/**" },
     ],

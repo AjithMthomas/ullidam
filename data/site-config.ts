@@ -3,9 +3,13 @@ import type { Region } from "@/lib/region";
 
 const digitsOnly = (value: string) => value.replace(/\D/g, "");
 
-/** Practice coordinator in international format without "+", as wa.me expects. */
+/**
+ * Practice coordinator in international format without "+", as wa.me expects.
+ * Temporary number (+91 97441 31213) at the user's request, 2026-11-24; the
+ * spec's coordinator line is +91 85909 25353.
+ */
 export const COORDINATOR_WHATSAPP = digitsOnly(
-  process.env.NEXT_PUBLIC_WHATSAPP_COORDINATOR || "918590925353",
+  process.env.NEXT_PUBLIC_WHATSAPP_COORDINATOR || "919744131213",
 );
 
 function formatInternationalNumber(digits: string): string {
@@ -30,6 +34,16 @@ export const siteConfig = {
     whatsapp: COORDINATOR_WHATSAPP,
     display: formatInternationalNumber(COORDINATOR_WHATSAPP),
   },
+  /**
+   * Social profiles for the floating contact icons. Placeholders until the
+   * practice shares its real pages: set NEXT_PUBLIC_INSTAGRAM_URL and
+   * NEXT_PUBLIC_LINKEDIN_URL (or edit here). The fallbacks open each site's
+   * home page, never someone else's account.
+   */
+  social: {
+    instagram: process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://www.instagram.com/",
+    linkedin: process.env.NEXT_PUBLIC_LINKEDIN_URL || "https://www.linkedin.com/",
+  },
   confidentialityPromise:
     "100% Confidential. No clinic waiting rooms. No relatives or employers will ever know.",
 } as const;
@@ -44,7 +58,7 @@ export const MAIN_NAV: readonly NavItem[] = [
   { label: "Therapists", href: "/therapists" },
   { label: "NRI Care", href: "/diaspora" },
   { label: "Awareness", href: "/awareness" },
-  { label: "Internships", href: "/internships" },
+  { label: "Careers", href: "/careers" },
 ];
 
 export const PRIMARY_CTA: NavItem = { label: "Book a session", href: "/therapists" };

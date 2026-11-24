@@ -10,6 +10,7 @@ import { PHOTOS, type Photo } from "@/data/photos";
 import { getTrack } from "@/data/services";
 import { THERAPISTS } from "@/data/therapists";
 import { cn } from "@/lib/cn";
+import { PalmShade } from "./PalmShade";
 import { springCalm } from "@/lib/motion";
 
 interface Step {
@@ -39,7 +40,7 @@ const STEPS: readonly Step[] = [
 /** The reference's stats row, with true facts only: a quiet label over a short value. */
 const FACTS = [
   { label: "Account", value: "None needed" },
-  { label: "Sessions", value: "Private video" },
+  { label: "Sessions", value: "Video or audio" },
   { label: "Languages", value: "Malayalam, English" },
 ] as const;
 
@@ -142,7 +143,8 @@ export function StepsStory() {
     <section aria-label="How it works: three steps to your first session" className="bg-canvas">
       {/* Desktop with motion: the compact stage stays in view through the three steps. */}
       <div ref={track} className="relative hidden h-[280svh] lg:motion-safe:block">
-        <div className="sticky top-0 flex h-svh flex-col justify-center pt-20">
+        <div className="sticky top-0 isolate flex h-svh flex-col justify-center pt-20">
+          <PalmShade />
           <div className="mx-auto w-full max-w-5xl px-8">
             <Heading />
 
@@ -251,7 +253,8 @@ export function StepsStory() {
       </div>
 
       {/* Phones, tablets and reduced motion: the same story as a list. */}
-      <div className="py-16 sm:py-20 md:py-24 lg:motion-safe:hidden">
+      <div className="relative isolate overflow-hidden py-16 sm:py-20 md:py-24 lg:motion-safe:hidden">
+        <PalmShade variant="list" />
         <Container>
           <Heading />
           <ol className="mx-auto mt-12 grid max-w-xl gap-10 md:mt-14">

@@ -28,6 +28,8 @@ export const palette = {
   /** Functional signals: keep these recognisable whatever the palette. */
   available: "#2E7D5B",
   fillingFast: "#C27803",
+  /** WhatsApp's own brand green, for the floating chat button only. */
+  whatsapp: "#25D366",
   unavailable: "#858D89",
   danger: "#A4402B",
 } as const;
@@ -89,6 +91,9 @@ export const theme = {
   statusFast: p.fillingFast,
   statusGone: p.unavailable,
   danger: p.danger,
+
+  /** The floating WhatsApp button once the visitor has scrolled past the landing. */
+  whatsapp: p.whatsapp,
 
   /** Shadow tint (used at low opacity). */
   shadow: mix(p.palm, BLACK, 0.45),

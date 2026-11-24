@@ -29,6 +29,7 @@
   --color-surface-raised: var(--theme-surface-raised);
   --color-glow: var(--theme-glow);
   --color-highlight: var(--theme-highlight);
+  --color-whatsapp: var(--theme-whatsapp);
 
   /* Surfaces */
   --color-canvas: var(--theme-surface);
@@ -620,5 +621,44 @@ html.lenis {
   }
   to {
     transform: translateY(200%);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Palm shade (components/home/PalmShade.tsx): the soft shadow of a palm frond
+ * swaying on the page, as if morning sun falls through a tree. Transform and
+ * opacity only, so the GPU moves it without repainting; paused off screen
+ * (data-paused) and still under reduced motion.
+ * ------------------------------------------------------------------------- */
+.palm-frond {
+  transform-origin: 8% 100%;
+  opacity: 0.55;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .palm-frond {
+    animation: palm-sway 13s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+  .palm-frond-late {
+    animation-duration: 17s;
+    animation-delay: -7s;
+  }
+  [data-paused="true"] .palm-frond {
+    animation-play-state: paused;
+  }
+}
+@keyframes palm-sway {
+  0%,
+  100% {
+    transform: rotate(-1.4deg) translate3d(0, 0, 0);
+    opacity: 0.46;
+  }
+  45% {
+    transform: rotate(1.8deg) translate3d(1.2%, -0.8%, 0);
+    opacity: 0.64;
+  }
+  70% {
+    transform: rotate(0.6deg) translate3d(0.6%, -0.3%, 0);
+    opacity: 0.54;
   }
 }

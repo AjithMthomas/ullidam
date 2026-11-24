@@ -55,6 +55,13 @@ export const PHOTOS = {
     position: "35% 50%",
     pexelsId: 9159663,
   },
+  /** /diaspora hero: 4:5 crop (1600 x 2000) from the 4160 x 6240 original. */
+  diasporaNight: {
+    src: "/photos/diaspora-night-phone.jpg",
+    alt: "Hands holding a phone late at night in bed, the screen lit in a dark room.",
+    position: "50% 50%",
+    pexelsId: 6943441,
+  },
   awareness: {
     src: "/photos/page-awareness.jpg",
     alt: "A small group sit in a circle of chairs, listening to one another.",
@@ -108,6 +115,13 @@ export const PHOTOS = {
     alt: "A smiling counsellor in glasses and a blazer, writing notes at her desk.",
     position: "64% 30%",
     pexelsId: 8190808,
+  },
+  /** Decorative only (PalmShade): a palm frond's shadow, greyed so only the shadow remains. */
+  palmShadow: {
+    src: "/photos/palm-shadow-soft.jpg",
+    alt: "",
+    position: "50% 50%",
+    pexelsId: 8516778,
   },
   closing: {
     src: "/photos/home-closing.jpg",

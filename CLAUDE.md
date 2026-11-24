@@ -128,6 +128,7 @@ npm start
   - **English-only:** no Malayalam script in the rendered page and no Malayalam fonts. Saying in English that sessions are offered in Malayalam is fine.
   - The homepage opens with "The Film" (`components/film/FilmHero.tsx`), not the older Hero + Threshold. The hanging ID-card faculty section stays, directly before the four tracks.
   - Photographs come from `data/photos.ts` (files in `public/photos`).
+  - **Mobile is equal priority (2026-11-24):** most visitors will come on phones. Every page, image and animation must look as sharp and considered on a phone (check at 390 x 844) as on desktop. Full-screen photos get art-directed portrait crops cut from the full-resolution original (never a stretched slice of a landscape photo); camera moves and zooms are gentler on small screens; UI work is not done until it has been checked on a phone as well as on desktop.
 - Colours still change only through `theme.ts` (one global colour file); new tokens go there, never inline hex values.
 
 ### B. Banned (AI slop)

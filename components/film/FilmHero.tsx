@@ -1,15 +1,52 @@
 "use client";
 
-import Image from "next/image";
-import { useRef } from "react";
+import { getImageProps } from "next/image";
+import { useRef, type CSSProperties } from "react";
 import { ArrowRight } from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
 import { FILM, FILM_COPY } from "@/data/film";
 import { PRIMARY_CTA } from "@/data/site-config";
+import { cn } from "@/lib/cn";
 import { gsap, MOTION_OK, ScrollTrigger, useGSAP } from "@/lib/gsap";
 
 const clamp = (v: number) => Math.min(1, Math.max(0, v));
 const smooth = (x: number) => x * x * (3 - 2 * x);
+
+/** Portrait screens (phones, tall windows) get the portrait crops and gentler camera moves. */
+const PORTRAIT = "(max-aspect-ratio: 4/5)";
+
+/**
+ * One shot, art-directed: the browser downloads only the file for this
+ * screen, the 9:16 portrait crop on phones or the wide frame elsewhere,
+ * each sized to the screen (quality 85 for clarity).
+ */
+function ShotPicture({ shot, first }: { shot: (typeof FILM.shots)[number]; first: boolean }) {
+  const common = { alt: shot.alt, fill: true, sizes: "100vw", quality: 85 } as const;
+  const {
+    props: { srcSet: portraitSrcSet },
+  } = getImageProps({ ...common, src: shot.portraitSrc });
+  const {
+    props: { srcSet, style, ...img },
+  } = getImageProps({
+    ...common,
+    src: shot.src,
+    loading: first ? "eager" : "lazy",
+    fetchPriority: first ? "high" : "auto",
+  });
+  return (
+    <picture>
+      <source media={PORTRAIT} srcSet={portraitSrcSet} sizes="100vw" />
+      {/* Art direction needs <picture>; getImageProps keeps next/image's optimisation. */}
+      <img
+        {...img}
+        srcSet={srcSet}
+        alt={shot.alt}
+        className="object-cover [object-position:var(--position)] [@media(max-aspect-ratio:4/5)]:[object-position:50%_50%]"
+        style={{ ...style, "--position": shot.position } as CSSProperties}
+      />
+    </picture>
+  );
+}
 
 /**
  * "Here, Now" (docs/specs/homepage-redesign.md, section 4.2). A quiet, minimal
@@ -40,9 +77,14 @@ export function FilmHero() {
       if (!wide || !ground || !drop || !hero || !cue || !shade || !light) return;
 
       const mm = gsap.matchMedia();
-      mm.add({ motion: MOTION_OK, large: "(min-width: 768px)" }, (context) => {
-        const { motion, large } = context.conditions as { motion: boolean; large: boolean };
+      mm.add({ motion: MOTION_OK, large: "(min-width: 768px)", portrait: PORTRAIT }, (context) => {
+        const { motion, large, portrait } = context.conditions as { motion: boolean; large: boolean; portrait: boolean };
         if (!motion) return;
+        // Phones get their own portrait crops, so the camera barely needs to
+        // zoom: small moves keep every frame at (or near) its native sharpness.
+        const move = portrait
+          ? { tiltY: 1.5, start: 1, push: 0.05, ground: 1.05, drop: 1.04 }
+          : { tiltY: 6, start: 1.08, push: 0.12, ground: 1.14, drop: 1.1 };
 
         const shown = (p: number, from: number, to: number, f = 0.04) =>
           smooth(clamp((p - from) / f)) * (1 - smooth(clamp((p - (to - f)) / f)));
@@ -66,12 +108,12 @@ export function FilmHero() {
 
           // 1. Wide: the camera pushes in and tilts down toward the sunlit grass.
           const tilt = seg(0, 0.44);
-          wide.style.transform = `translateY(${(-6 * tilt).toFixed(2)}%) scale(${(1.08 + 0.12 * tilt).toFixed(4)})`;
+          wide.style.transform = `translateY(${(-move.tiltY * tilt).toFixed(2)}%) scale(${(move.start + move.push * tilt).toFixed(4)})`;
           wide.style.filter = `brightness(${(1 + 0.06 * tilt).toFixed(3)})`;
           // 2. Ground level: the camera lowers into the grass as the sun rises between the trees.
-          arrive(ground, p, 0.34, 0.7, 1.14, 1.0);
+          arrive(ground, p, 0.34, 0.7, move.ground, 1.0);
           // 3. The present moment: focus on a single dew drop.
-          arrive(drop, p, 0.64, 0.94, 1.1, 1.0);
+          arrive(drop, p, 0.64, 0.94, move.drop, 1.0);
 
           const showing = [shown(p, 0.12, 0.34), shown(p, 0.44, 0.62), shown(p, 0.72, 0.88)];
           lines.forEach((line, i) => {
@@ -124,18 +166,15 @@ export function FilmHero() {
               <div
                 key={shot.key}
                 data-shot={shot.key}
-                className={index === 0 ? "absolute inset-0 scale-[1.08]" : "absolute inset-0 opacity-0 motion-reduce:hidden"}
-                style={{ transformOrigin: shot.focus }}
+                className={cn(
+                  "absolute inset-0 [transform-origin:var(--focus)] [@media(max-aspect-ratio:4/5)]:[transform-origin:var(--focus-portrait)]",
+                  index === 0
+                    ? "[transform:scale(1.08)] motion-reduce:[transform:none] [@media(max-aspect-ratio:4/5)]:[transform:none]"
+                    : "opacity-0 motion-reduce:hidden",
+                )}
+                style={{ "--focus": shot.focus, "--focus-portrait": shot.portraitFocus } as CSSProperties}
               >
-                <Image
-                  src={shot.src}
-                  alt={shot.alt}
-                  fill
-                  preload={index === 0}
-                  sizes="100vw"
-                  className="object-cover"
-                  style={{ objectPosition: shot.position }}
-                />
+                <ShotPicture shot={shot} first={index === 0} />
               </div>
             ))}
             <div aria-hidden="true" data-shade className="film-shade absolute inset-0" />
@@ -145,7 +184,7 @@ export function FilmHero() {
           {/* The whole landing: one headline, one line, one action. */}
           <div
             data-hero
-            className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-end px-7 pb-24 sm:px-10 md:pb-20 lg:px-16 lg:pb-24"
+            className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-end px-7 pb-14 sm:px-10 md:pb-20 lg:px-16 lg:pb-24"
           >
             <h1 className="max-w-4xl font-display text-[clamp(2.6rem,1.2rem+4.6vw,5.75rem)] leading-[0.95] tracking-[-0.015em] text-balance text-on-brand uppercase motion-safe:animate-settle">
               {FILM_COPY.title}
@@ -162,7 +201,7 @@ export function FilmHero() {
           <span
             aria-hidden="true"
             data-cue
-            className="absolute right-8 bottom-28 z-10 hidden h-12 w-px overflow-hidden bg-white/30 md:block lg:right-16 motion-reduce:hidden"
+            className="absolute right-8 bottom-10 z-10 hidden h-12 w-px overflow-hidden bg-white/30 md:block lg:right-16 motion-reduce:hidden"
           >
             <span className="film-cue block h-1/2 w-full bg-white" />
           </span>

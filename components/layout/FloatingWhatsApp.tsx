@@ -1,46 +1,95 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { MessageCircle, Phone } from "lucide-react";
+import { useEffect, useState, type ComponentType } from "react";
+import { InstagramLogo, LinkedInLogo, WhatsAppLogo } from "@/components/ui/BrandIcons";
 import { siteConfig } from "@/data/site-config";
 import { cn } from "@/lib/cn";
 import { whatsappHref } from "@/lib/whatsapp";
 
+interface ContactLink {
+  key: string;
+  label: string;
+  href: string;
+  Icon: ComponentType<{ className?: string }>;
+}
+
 /**
- * The coordinator's WhatsApp number, always within reach at the bottom right
- * of every page. On therapist profiles a mobile booking bar already sits at
- * the foot of the screen, so the button lifts above it there.
+ * WhatsApp, Instagram and LinkedIn as a slim rail fixed to the middle of the
+ * right edge, on every page. Small icons, but each link keeps a 44 px touch
+ * target. Over the landing area the rail matches the site (deep green); past
+ * it, the rail turns light and WhatsApp shows its own green.
  */
 export function FloatingWhatsApp() {
   const pathname = usePathname();
-  const aboveBookingBar = pathname.startsWith("/therapists/");
+  const past = usePastLanding(pathname);
+
+  const links: ContactLink[] = [
+    { key: "whatsapp", label: `WhatsApp our coordinator, ${siteConfig.coordinator.display}`, href: whatsappHref(), Icon: WhatsAppLogo },
+    { key: "instagram", label: "Ullidam on Instagram", href: siteConfig.social.instagram, Icon: InstagramLogo },
+    { key: "linkedin", label: "Ullidam on LinkedIn", href: siteConfig.social.linkedin, Icon: LinkedInLogo },
+  ];
 
   return (
-    <a
-      href={whatsappHref()}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={`Message our coordinator on WhatsApp, ${siteConfig.coordinator.display} (opens in a new tab)`}
+    <nav
+      aria-label="Contact and social links"
       className={cn(
-        "group fixed right-4 z-40 inline-flex h-12 items-center gap-2.5 rounded-full bg-brand pr-5 pl-3.5 text-on-brand",
-        "shadow-float ring-1 ring-on-brand/15 select-none",
-        "transition-[background-color,transform] duration-300 ease-calm hover:bg-brand-soft",
-        "motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-[0.97] motion-safe:active:duration-100",
-        "motion-safe:animate-settle [animation-delay:600ms] sm:right-6 sm:h-14 sm:pr-6 sm:pl-4",
-        "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent",
-        aboveBookingBar
-          ? "bottom-[calc(5.5rem+env(safe-area-inset-bottom))] lg:bottom-6"
-          : "bottom-[max(1rem,env(safe-area-inset-bottom))] sm:bottom-6",
+        "fixed top-1/2 right-0 z-40 -translate-y-1/2 overflow-hidden rounded-l-2xl shadow-card ring-1 backdrop-blur-md transition-[background-color,box-shadow] duration-500 ease-calm",
+        past ? "bg-surface-raised/90 ring-line" : "bg-brand/90 ring-on-brand/15",
       )}
     >
-      {/* A speech bubble with a handset: the familiar WhatsApp shape, drawn with lucide icons. */}
-      <span aria-hidden="true" className="relative grid size-6 place-items-center">
-        <MessageCircle className="size-6" />
-        <Phone className="absolute size-2.5" strokeWidth={2.25} />
-      </span>
-      <span className="text-[0.9375rem] font-medium tabular-nums whitespace-nowrap">
-        {siteConfig.coordinator.display}
-      </span>
-    </a>
+      <ul className="flex flex-col py-1">
+        {links.map(({ key, label, href, Icon }) => (
+          <li key={key}>
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${label} (opens in a new tab)`}
+              className={cn(
+                "grid size-11 place-items-center transition-[color,background-color,transform] duration-300 ease-calm",
+                "focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-accent motion-safe:hover:scale-110",
+                past
+                  ? cn("hover:bg-canvas-muted", key === "whatsapp" ? "text-whatsapp" : "text-ink-1")
+                  : "text-on-brand hover:bg-on-brand/10",
+              )}
+            >
+              <Icon className={key === "whatsapp" ? "size-[1.1875rem]" : "size-[1.0625rem]"} />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
+}
+
+/** True once the visitor has scrolled past the landing area of the current page. */
+function usePastLanding(pathname: string) {
+  const [past, setPast] = useState(false);
+
+  useEffect(() => {
+    let frame = 0;
+    const check = () => {
+      frame = 0;
+      // The homepage film is pinned, so its host (pin spacer included) is the landing.
+      const landing = document.querySelector(".film-host");
+      const next = landing
+        ? landing.getBoundingClientRect().bottom < window.innerHeight * 0.5
+        : window.scrollY > window.innerHeight * 0.8;
+      setPast(next);
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(check);
+    };
+    check();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [pathname]);
+
+  return past;
 }

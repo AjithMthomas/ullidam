@@ -35,7 +35,7 @@ export function FacultySection() {
         </p>
       </Container>
       <FacultyBrowser therapists={THERAPISTS} />
-      <Container className="flex justify-center">
+      <Container className="mt-8 flex justify-center md:mt-10">
         {/* A pill with the clinicians' faces: the link says who you will meet before you click. */}
         <Link
           href="/therapists"
