@@ -1,5 +1,3 @@
-import type { NextConfig } from "next";
-
 /**
  * Security and privacy headers for every route.
  *
@@ -25,14 +23,14 @@ const securityHeaders = [
   },
 ];
 
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   typedRoutes: true,
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],
-    // Therapist portraits are Unsplash placeholders until real photography arrives.
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com", port: "", pathname: "/**" },
     ],
