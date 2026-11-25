@@ -22,7 +22,7 @@ export type Driver = "local" | "google" | "demo";
  */
 export class PortalNotConfiguredError extends StoreError {
   constructor(readonly detail: string) {
-    super("The clinician portal is being set up.", 503);
+    super("The therapist portal is being set up.", 503);
     this.name = "PortalNotConfiguredError";
   }
 }

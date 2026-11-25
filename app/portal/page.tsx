@@ -24,11 +24,11 @@ export default function PortalSignInPage({ searchParams }: PageProps<"/portal">)
         <div className="flex items-center gap-3 text-brand">
           <LogoMark className="size-8" />
           <span className="font-display text-xl">Ullidam</span>
-          <span className="rounded-full bg-canvas-muted px-2.5 py-1 text-xs text-ink-2">Clinician portal</span>
+          <span className="rounded-full bg-canvas-muted px-2.5 py-1 text-xs text-ink-2">Therapist portal</span>
         </div>
         <h1 className="mt-10 font-display text-headline text-balance text-brand">Welcome back.</h1>
         <p className="mt-3 max-w-xl leading-relaxed text-pretty text-ink-2">
-          A private space for Ullidam clinicians. Only you can see your clients and notes.
+          A private space for Ullidam therapists. Only you can see your clients and notes.
         </p>
         <div className="mt-10">
           <Suspense fallback={<CardsSkeleton />}>
@@ -67,7 +67,7 @@ async function SignInGate({ searchParams }: { searchParams: PageProps<"/portal">
 function NotReady({ temporary = false }: { temporary?: boolean }) {
   return (
     <div role="status" className="rounded-2xl bg-surface-raised p-6 ring-1 ring-line">
-      <p className="font-medium text-ink-1">{temporary ? "We couldn’t reach the portal’s records just now." : "The clinician portal is being set up."}</p>
+      <p className="font-medium text-ink-1">{temporary ? "We couldn’t reach the portal’s records just now." : "The therapist portal is being set up."}</p>
       <p className="mt-2 text-sm leading-relaxed text-ink-2">
         {temporary
           ? "Nothing was lost. Please try again in a few minutes."

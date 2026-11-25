@@ -32,7 +32,7 @@ const REASSURANCES: Feature[] = [
   {
     title: "Is it confidential?",
     description:
-      "Yes. What you share stays with your clinician. The only exception is a serious risk to your safety or someone else’s, which your therapist explains at the start.",
+      "Yes. What you share stays with your therapist. The only exception is a serious risk to your safety or someone else’s, which they explain at the start.",
   },
   {
     title: "Do I need an account?",

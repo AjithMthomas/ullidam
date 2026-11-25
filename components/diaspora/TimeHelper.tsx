@@ -83,7 +83,7 @@ export function TimeHelper() {
         )}
       </p>
       <p className="mt-3 text-sm leading-relaxed text-ink-3">
-        Tell us two times that suit you. Our coordinator matches them to a clinician&rsquo;s schedule. The time you pick
+        Tell us two times that suit you. Our coordinator matches them to a therapist&rsquo;s schedule. The time you pick
         here is added to your WhatsApp message.
       </p>
     </div>

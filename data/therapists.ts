@@ -107,7 +107,7 @@ export const THERAPISTS: Therapist[] = [
     ],
     availabilityStatus: "fast",
     nextAvailableText: "Filling Fast (2 Slots Left)",
-    bio: "A veteran relationship clinician leading Ullidam’s Couple and Pre-Divorce/Divorce counselling division, helping partners de-escalate crisis and rebuild self-worth.",
+    bio: "A veteran relationship therapist leading Ullidam’s Couple and Pre-Divorce/Divorce counselling division, helping partners de-escalate crisis and rebuild self-worth.",
     approach:
       "In relationship work, the dynamic itself is my focus. I illuminate toxic cycles and guide either healthy repair or compassionate separation.",
     firstSessionGuide:

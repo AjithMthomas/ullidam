@@ -24,7 +24,7 @@ export const FAQ: readonly FaqItem[] = [
   {
     question: "Is everything I share confidential?",
     answer:
-      "Yes. What you share stays with your clinician. The only exception is a serious risk to your safety or someone else’s, which your therapist explains at the start.",
+      "Yes. What you share stays with your therapist. The only exception is a serious risk to your safety or someone else’s, which they explain at the start.",
   },
   {
     question: "Do I need to create an account?",
@@ -36,7 +36,7 @@ export const FAQ: readonly FaqItem[] = [
   },
   {
     question: "Can I speak in Malayalam?",
-    answer: "Yes. Every clinician works in Malayalam and English, and some also in Hindi or Tamil. Switch whenever you like.",
+    answer: "Yes. Every therapist works in Malayalam and English, and some also in Hindi or Tamil. Switch whenever you like.",
   },
   {
     question: "Do I need a therapist or a psychiatrist?",

@@ -6,7 +6,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { PHOTOS } from "@/data/photos";
 
 const STEPS = [
-  { title: "Choose your clinician", body: "Browse four specialists, or let our coordinator suggest the right person." },
+  { title: "Choose your therapist", body: "Browse four specialists, or let our coordinator suggest the right person." },
   { title: "Pick two times", body: "A preferred slot and a backup, arranged around your local time." },
   { title: "Confirm on WhatsApp", body: "Our coordinator confirms one, and a private video link follows." },
 ];

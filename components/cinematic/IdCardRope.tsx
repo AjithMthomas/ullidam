@@ -233,7 +233,7 @@ function IdCard({ therapist, index, hangRef, swingRef, swings, hangEls }: IdCard
                   <span className="font-display text-[0.6875rem] font-medium tracking-[0.22em] text-brand">ULLIDAM</span>
                 </span>
                 <span className="rounded-full bg-brand px-2.5 py-1 text-[0.5625rem] font-semibold tracking-[0.18em] text-on-brand uppercase">
-                  Clinician
+                  Therapist
                 </span>
               </div>
 
@@ -560,7 +560,7 @@ export function IdCardRope({ therapists, highlight = null }: { therapists: Thera
           <button
             type="button"
             onClick={() => nudge(-1)}
-            aria-label="Previous clinicians"
+            aria-label="Previous therapists"
             className="absolute top-1/2 left-3 z-30 hidden size-12 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-canvas/90 text-brand shadow-card backdrop-blur-md md:flex"
           >
             <ChevronLeft className="size-5" />
@@ -570,7 +570,7 @@ export function IdCardRope({ therapists, highlight = null }: { therapists: Thera
           <button
             type="button"
             onClick={() => nudge(1)}
-            aria-label="More clinicians"
+            aria-label="More therapists"
             className="absolute top-1/2 right-3 z-30 hidden size-12 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-canvas/90 text-brand shadow-card backdrop-blur-md md:flex"
           >
             <ChevronRight className="size-5" />

@@ -184,7 +184,7 @@ export function Threshold({ dawn }: { dawn: ReactNode }) {
           <p className="text-xs font-semibold tracking-[0.2em] text-accent-ink uppercase">Within</p>
           <h3 className="mt-6 font-display text-display text-balance text-brand">And a way forward, grounded in evidence.</h3>
           <p className="mx-auto mt-7 max-w-xl text-lead text-pretty text-ink-2">
-            Approaches proven by research, offered with warmth by clinicians who understand where you come from.
+            Approaches proven by research, offered with warmth by therapists who understand where you come from.
           </p>
           <ul className="mt-10 flex flex-wrap justify-center gap-2.5" aria-label="Therapies we use">
             {MODALITIES.map((modality) => (

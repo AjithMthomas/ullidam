@@ -70,7 +70,7 @@ export function TrackPage({ id }: { id: TrackId }) {
       <Section>
         <Container>
           <SectionIntro
-            eyebrow="Your clinicians"
+            eyebrow="Your therapists"
             title={therapists.length === 1 ? "The specialist for this track." : "The specialists for this track."}
           />
           <div className="mt-12 md:mt-14">

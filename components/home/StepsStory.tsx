@@ -21,8 +21,8 @@ interface Step {
 
 const STEPS: readonly Step[] = [
   {
-    title: "Choose your clinician",
-    body: "Browse our clinicians, or let our coordinator suggest the right person for you.",
+    title: "Choose your therapist",
+    body: "Browse our therapists, or let our coordinator suggest the right person for you.",
     photo: PHOTOS.stepChoose,
   },
   {
@@ -243,7 +243,7 @@ export function StepsStory() {
                   ))}
                 </dl>
                 <ButtonLink href="/therapists" className="mt-7 h-11 px-5 text-sm">
-                  Find your clinician
+                  Find your therapist
                   <ArrowRight />
                 </ButtonLink>
               </div>
@@ -288,7 +288,7 @@ export function StepsStory() {
           </dl>
           <div className="mt-10 flex justify-center">
             <ButtonLink href="/therapists">
-              Find your clinician
+              Find your therapist
               <ArrowRight />
             </ButtonLink>
           </div>

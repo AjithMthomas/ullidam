@@ -207,7 +207,7 @@ export default function DiasporaPage() {
         <Container>
           <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
             <div>
-              <h2 className="font-display text-headline text-balance text-brand">Meet our clinicians.</h2>
+              <h2 className="font-display text-headline text-balance text-brand">Meet our therapists.</h2>
               <p className="mt-4 text-pretty text-ink-2 md:text-lg">Every session in Malayalam, English or a mix.</p>
             </div>
             <p className="inline-flex items-center gap-2 self-start rounded-full border border-line-strong bg-surface-raised px-3.5 py-1.5 text-sm text-ink-2 md:self-end">
@@ -239,7 +239,7 @@ export default function DiasporaPage() {
             href="/therapists"
             className="group mt-8 inline-flex min-h-11 items-center gap-2 font-medium text-brand underline decoration-brand/25 underline-offset-4 hover:decoration-brand"
           >
-            See all clinicians
+            See all therapists
             <ArrowRight className="size-4 transition-transform duration-500 ease-calm group-hover:translate-x-1" />
           </Link>
         </Container>

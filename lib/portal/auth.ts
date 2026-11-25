@@ -155,7 +155,7 @@ export async function changePin(
 /** Coordinator: a one-time setup code for a clinician's first sign-in or a forgotten PIN. Shown once, stored only hashed. */
 export async function issueSetupCode(clinicianId: string, issuedBy: string): Promise<string> {
   const auth = await findAuthRow(clinicianId);
-  if (!auth) throw new StoreError("Unknown clinician.", 404);
+  if (!auth) throw new StoreError("Unknown therapist.", 404);
   const alphabet = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";
   const code = Array.from(crypto.getRandomValues(new Uint8Array(10)), (b) => alphabet[b % alphabet.length]).join("");
   await updateRow("Clinician_Auth", auth, {

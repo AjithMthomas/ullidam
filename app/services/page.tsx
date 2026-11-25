@@ -142,7 +142,7 @@ export default function ServicesPage() {
       <ClosingCta
         tone="canvas"
         title="Not sure where to begin?"
-        lead="Tell our coordinator a little about what is happening. They will suggest the right track and clinician, in confidence."
+        lead="Tell our coordinator a little about what is happening. They will suggest the right track and therapist, in confidence."
       />
     </>
   );

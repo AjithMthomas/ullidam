@@ -94,7 +94,7 @@ async function Desk() {
                               Confirm this time
                             </ActionButton>
                           ) : (
-                            <p className="text-xs text-danger">No longer open in the clinician&rsquo;s schedule.</p>
+                            <p className="text-xs text-danger">No longer open in the therapist&rsquo;s schedule.</p>
                           )}
                         </div>
                       </div>
@@ -180,7 +180,7 @@ async function Desk() {
 
       <Panel title="Sign-in codes">
         <p className="mb-4 max-w-2xl text-sm leading-relaxed text-ink-2">
-          For a clinician&rsquo;s first sign-in or a forgotten PIN: issue a one-time code (valid 24 hours) and share it privately. They choose their own PIN with it.
+          For a therapist&rsquo;s first sign-in or a forgotten PIN: issue a one-time code (valid 24 hours) and share it privately. They choose their own PIN with it.
         </p>
         <ul className="divide-y divide-line">
           {clinicians.map((c) => (

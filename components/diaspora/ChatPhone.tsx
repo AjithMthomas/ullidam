@@ -79,7 +79,7 @@ export function ChatPhone() {
           <ul className="flex justify-center gap-5 border-b border-line/70 py-2 text-[0.625rem] text-ink-3">
             {[
               { Icon: ShieldCheck, label: "Confidential" },
-              { Icon: BadgeCheck, label: "Registered clinicians" },
+              { Icon: BadgeCheck, label: "Registered therapists" },
               { Icon: Clock, label: "Your time zone" },
             ].map(({ Icon, label }) => (
               <li key={label} className="flex flex-col items-center gap-0.5">
@@ -101,10 +101,10 @@ export function ChatPhone() {
               Hi, I&rsquo;m in {place}. Can I talk to someone in Malayalam?
             </motion.li>
             <motion.li variants={item} className="max-w-[85%] self-start rounded-2xl rounded-bl-md bg-surface-raised px-3 py-2 text-ink-1 ring-1 ring-line">
-              Of course. A registered clinician will talk with you, privately.
+              Of course. A registered therapist will talk with you, privately.
             </motion.li>
             <motion.li variants={item} className="max-w-[85%] self-start rounded-2xl rounded-bl-md bg-surface-raised px-3 py-2.5 ring-1 ring-line">
-              <span className="block text-[0.6875rem] font-semibold tracking-wide text-accent-ink uppercase">Our clinicians</span>
+              <span className="block text-[0.6875rem] font-semibold tracking-wide text-accent-ink uppercase">Our therapists</span>
               <span className="mt-1.5 flex -space-x-2.5">
                 {FACES.map((therapist) => (
                   <span key={therapist.id} className="relative size-9 overflow-hidden rounded-full bg-tertiary ring-2 ring-surface-raised">

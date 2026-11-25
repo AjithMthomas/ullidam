@@ -22,7 +22,7 @@ export default function TherapistsPage() {
               <Eyebrow>Resident faculty</Eyebrow>
               <h1 className="mt-4 font-display text-headline text-balance text-brand">Four specialists, carefully chosen.</h1>
               <p className="mt-4 text-pretty text-ink-2 md:text-lg">
-                A small team of senior clinicians. Each works online, in Malayalam and English, wherever you are.
+                A small team of senior therapists. Each works online, in Malayalam and English, wherever you are.
               </p>
             </div>
             <p className="inline-flex shrink-0 items-center gap-2 self-start rounded-full border border-line-strong bg-surface-raised px-3.5 py-1.5 text-sm text-ink-2 lg:self-end">

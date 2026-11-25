@@ -21,7 +21,7 @@ export function FacultyBrowser({ therapists }: { therapists: Therapist[] }) {
   return (
     <>
       <Container>
-        <div role="group" aria-label="Highlight clinicians by type of care" className="mt-10 flex flex-wrap gap-2">
+        <div role="group" aria-label="Highlight therapists by type of care" className="mt-10 flex flex-wrap gap-2">
           {CHIPS.map((chip) => {
             const on = track === chip.id;
             return (

@@ -24,7 +24,7 @@ const OFFERINGS: Feature[] = [
   {
     icon: MessagesSquare,
     title: "Case conferences",
-    description: "Discuss anonymised cases with clinicians and see how a formulation comes together.",
+    description: "Discuss anonymised cases with therapists and see how a formulation comes together.",
   },
   {
     icon: BookOpen,
@@ -51,7 +51,7 @@ export default function InternshipsPage() {
         photo={PHOTOS.internships}
         eyebrow="Internship & training"
         title="Learn the practice of care, under supervision."
-        lead="Structured internships and training for psychology students and aspiring mental health professionals. Practical exposure, guided by experienced clinicians."
+        lead="Structured internships and training for psychology students and aspiring mental health professionals. Practical exposure, guided by experienced therapists."
       />
 
       <Section tone="muted">

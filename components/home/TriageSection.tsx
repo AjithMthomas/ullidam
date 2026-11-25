@@ -10,7 +10,7 @@ export function TriageSection() {
         <div className="lg:sticky lg:top-28">
           <SectionIntro
             title="Not sure where to begin?"
-            lead="Three gentle questions. We will suggest a track and a clinician. It is a starting point, never a diagnosis."
+            lead="Three gentle questions. We will suggest a track and a therapist. It is a starting point, never a diagnosis."
           />
           <div aria-hidden="true" className="mt-14 hidden items-center gap-6 lg:flex">
             <span className="relative flex size-24 items-center justify-center">

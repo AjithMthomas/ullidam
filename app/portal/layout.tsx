@@ -6,7 +6,7 @@ import type { Metadata } from "next";
  * docs/specs/portal.md
  */
 export const metadata: Metadata = {
-  title: { default: "Clinician portal", template: "%s | Ullidam portal" },
+  title: { default: "Therapist portal", template: "%s | Ullidam portal" },
   robots: { index: false, follow: false, nocache: true, googleBot: { index: false, follow: false } },
 };
 

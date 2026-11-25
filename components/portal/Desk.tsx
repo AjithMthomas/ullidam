@@ -31,7 +31,7 @@ export function NewBookingForm({ clinicians, tracks }: { clinicians: { id: strin
   const [state, action, pending] = useActionState<ActionState, FormData>(createBookingAction, {});
   return (
     <form action={action} className="grid gap-4 sm:grid-cols-2">
-      <Field label="Clinician">
+      <Field label="Therapist">
         <select name="clinicianId" required className={inputClass} defaultValue="">
           <option value="" disabled>
             Choose

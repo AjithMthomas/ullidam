@@ -46,7 +46,7 @@ export function TrustBento() {
         <div className="mt-6 grid gap-6 lg:grid-cols-3">
           <article className="rounded-[2rem] border border-line bg-surface-raised p-8 md:p-10">
             <BadgeCheck className="size-6 text-secondary" />
-            <h3 className="mt-6 font-display text-title text-brand">Trained, registered clinicians</h3>
+            <h3 className="mt-6 font-display text-title text-brand">Trained, registered therapists</h3>
             <p className="mt-3 leading-relaxed text-pretty text-ink-2">
               Psychologists and a psychiatrist, each with their qualifications shown on their profile.
             </p>

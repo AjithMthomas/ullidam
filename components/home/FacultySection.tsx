@@ -13,8 +13,8 @@ export function FacultySection() {
     <Section id="faculty" tone="muted" className="overflow-x-clip">
       <Container className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
         <SectionIntro
-          title="The clinicians who will listen"
-          lead="Every clinician works online, in Malayalam and English. Turn a card over to see how they work."
+          title="The therapists who will listen"
+          lead="Every therapist works online, in Malayalam and English. Turn a card over to see how they work."
         />
         <a
           href={whatsappHref()}
@@ -51,7 +51,7 @@ export function FacultySection() {
               </span>
             ))}
           </span>
-          Compare our clinicians
+          Compare our therapists
           <span
             aria-hidden="true"
             className="grid size-10 place-items-center rounded-full bg-brand text-on-brand transition-colors duration-500 ease-calm group-hover:bg-brand-soft"
