@@ -17,44 +17,81 @@ import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node
 import path from "node:path";
 
 const root = process.cwd();
-const dataDir = path.join(root, ".data", "portal");
+// --demo builds the committed demo copy (lib/portal/demo) used on Vercel, with demo-only keys.
+const demo = process.argv.includes("--demo");
+const localDir = path.join(root, ".data", "portal");
+const dataDir = demo ? path.join(root, "lib", "portal", "demo") : localDir;
 const envFile = path.join(root, ".env.local");
 const schema = JSON.parse(readFileSync(path.join(root, "lib", "portal", "schema.json"), "utf8"));
-const reset = process.argv.includes("--reset");
+const reset = process.argv.includes("--reset") || demo;
 
-/* 1. Secrets in .env.local (kept if already present). */
-const env = existsSync(envFile) ? readFileSync(envFile, "utf8") : "";
-const has = (name) => new RegExp(`^${name}=`, "m").test(env);
-const additions = [];
-if (!has("PORTAL_DATA_DRIVER")) additions.push("PORTAL_DATA_DRIVER=local");
-if (!has("PORTAL_SESSION_SECRET")) additions.push(`PORTAL_SESSION_SECRET=${randomBytes(48).toString("base64url")}`);
-if (!has("RECORDS_ENCRYPTION_KEY")) additions.push(`RECORDS_ENCRYPTION_KEY=${randomBytes(32).toString("base64")}`);
-if (!has("PIN_PEPPER")) additions.push(`PIN_PEPPER=${randomBytes(32).toString("base64url")}`);
-if (additions.length) {
-  writeFileSync(envFile, `${env}\n# Clinician portal (local development only; production values live in Vercel)\n${additions.join("\n")}\n`);
-  console.log(`Added ${additions.length} portal setting(s) to .env.local`);
+let pepper;
+let master;
+if (demo) {
+  /* Demo keys: public by design, used only for the fake demo data (never real records). */
+  mkdirSync(dataDir, { recursive: true });
+  const keysFile = path.join(dataDir, "keys.json");
+  if (!existsSync(keysFile)) {
+    writeFileSync(
+      keysFile,
+      JSON.stringify(
+        {
+          $comment: "Demo-only keys for the fake sample data in this folder. Public by design. Never use for real records: production sets PORTAL_DATA_DRIVER=google with its own secrets.",
+          PORTAL_SESSION_SECRET: randomBytes(48).toString("base64url"),
+          RECORDS_ENCRYPTION_KEY: randomBytes(32).toString("base64"),
+          PIN_PEPPER: randomBytes(32).toString("base64url"),
+        },
+        null,
+        2,
+      ) + "\n",
+    );
+  }
+  const keys = JSON.parse(readFileSync(keysFile, "utf8"));
+  pepper = keys.PIN_PEPPER;
+  master = Buffer.from(keys.RECORDS_ENCRYPTION_KEY, "base64");
+} else {
+  /* 1. Secrets in .env.local (kept if already present). */
+  const env = existsSync(envFile) ? readFileSync(envFile, "utf8") : "";
+  const has = (name) => new RegExp(`^${name}=`, "m").test(env);
+  const additions = [];
+  if (!has("PORTAL_DATA_DRIVER")) additions.push("PORTAL_DATA_DRIVER=local");
+  if (!has("PORTAL_SESSION_SECRET")) additions.push(`PORTAL_SESSION_SECRET=${randomBytes(48).toString("base64url")}`);
+  if (!has("RECORDS_ENCRYPTION_KEY")) additions.push(`RECORDS_ENCRYPTION_KEY=${randomBytes(32).toString("base64")}`);
+  if (!has("PIN_PEPPER")) additions.push(`PIN_PEPPER=${randomBytes(32).toString("base64url")}`);
+  if (additions.length) {
+    writeFileSync(envFile, `${env}\n# Clinician portal (local development only; production values live in Vercel)\n${additions.join("\n")}\n`);
+    console.log(`Added ${additions.length} portal setting(s) to .env.local`);
+  }
+  const finalEnv = readFileSync(envFile, "utf8");
+  const secret = (name) => finalEnv.match(new RegExp(`^${name}=(.+)$`, "m"))?.[1]?.trim();
+  pepper = secret("PIN_PEPPER");
+  master = Buffer.from(secret("RECORDS_ENCRYPTION_KEY"), "base64");
 }
-const finalEnv = readFileSync(envFile, "utf8");
-const secret = (name) => finalEnv.match(new RegExp(`^${name}=(.+)$`, "m"))?.[1]?.trim();
-const pepper = secret("PIN_PEPPER");
-const master = Buffer.from(secret("RECORDS_ENCRYPTION_KEY"), "base64");
 
-/* 2. Keep existing dev PINs on --reset. */
-if (existsSync(dataDir) && !reset) {
+/* 2. Keep existing PINs: hashes on a local --reset; the same plain PINs for the demo copy. */
+if (!demo && existsSync(dataDir) && !reset) {
   console.log("Local portal data already exists (.data/portal). Use --reset to rebuild the sample data.");
   process.exit(0);
 }
 const previousAuth = new Map();
+const knownPins = new Map(); // name or id -> plain PIN, from the local DEV-PINS.txt
 let previousPins = "";
 try {
-  const vault = JSON.parse(readFileSync(path.join(dataDir, "vault.json"), "utf8"));
-  const [header, ...rows] = vault.Clinician_Auth;
-  for (const row of rows) previousAuth.set(row[header.indexOf("Clinician_ID")], row[header.indexOf("PIN_Hash")]);
-  previousPins = readFileSync(path.join(dataDir, "DEV-PINS.txt"), "utf8");
+  previousPins = readFileSync(path.join(localDir, "DEV-PINS.txt"), "utf8");
+  for (const line of previousPins.split("\n")) {
+    const match = /^(.+?)\s+(\d{6})\s*$/.exec(line.trim());
+    if (match) knownPins.set(match[1].trim(), match[2]);
+  }
+  if (!demo) {
+    const vault = JSON.parse(readFileSync(path.join(localDir, "vault.json"), "utf8"));
+    const [header, ...rows] = vault.Clinician_Auth;
+    for (const row of rows) previousAuth.set(row[header.indexOf("Clinician_ID")], row[header.indexOf("PIN_Hash")]);
+  }
 } catch {
   /* first run */
 }
-if (reset) rmSync(dataDir, { recursive: true, force: true });
+if (demo) previousPins = "";
+if (reset && !demo) rmSync(dataDir, { recursive: true, force: true });
 mkdirSync(dataDir, { recursive: true });
 
 /* Crypto: the same scheme as lib/portal/crypto.ts. */
@@ -132,17 +169,18 @@ const FAKE_CLIENTS = [
 ];
 
 const pins = [];
-const auth = (clinicianId) => {
+const auth = (clinicianId, displayName = clinicianId) => {
   const kept = previousAuth.get(clinicianId);
   if (kept) return kept;
-  const pin = devPin();
-  pins.push(`${clinicianId.padEnd(20)} ${pin}`);
+  // Demo copy: the same plain PINs as the local data (re-hashed with the demo pepper).
+  const pin = knownPins.get(displayName) ?? knownPins.get(clinicianId) ?? devPin();
+  pins.push(`${displayName.padEnd(22)} ${pin}`);
   return hashPin(pin);
 };
 
 for (const [cid, name, slug, title, photo] of clinicians) {
   put("Clinicians", { Clinician_ID: cid, Display_Name: name, Slug: slug, Title: title, Photo_URL: photo, Role: "clinician", Profile_Status: "Published", Active: "TRUE" });
-  put("Clinician_Auth", { Clinician_ID: cid, PIN_Hash: auth(cid), Failed_Attempts: "0", Session_Version: "0" });
+  put("Clinician_Auth", { Clinician_ID: cid, PIN_Hash: auth(cid, name), Failed_Attempts: "0", Session_Version: "0" });
   for (const [weekday, shifts] of Object.entries(WEEKLY[cid])) for (const shift of shifts) put("Weekly_Pattern", { Therapist_ID: cid, Weekday: weekday, Shift: shift, Active: "TRUE" });
 }
 put("Clinicians", { Clinician_ID: "coordinator", Display_Name: "Practice Coordinator", Slug: "", Title: "Coordinator", Photo_URL: "", Role: "coordinator", Active: "TRUE" });
@@ -305,10 +343,12 @@ for (const [cid, , , , , track] of clinicians) {
 
 writeFileSync(path.join(dataDir, "ops.json"), JSON.stringify(books.ops, null, 1));
 writeFileSync(path.join(dataDir, "vault.json"), JSON.stringify(books.vault, null, 1));
-const header = "Development PINs (sample clinicians and coordinator, fake data only)\n\n";
-const kept = previousPins.replace(header, "").trim();
+const header = demo
+  ? "Demo PINs (deployed demo with fake sample data only)\n\n"
+  : "Development PINs (sample clinicians and coordinator, fake data only)\n\n";
+const kept = demo ? "" : previousPins.replace(/^Development PINs[^\n]*\n+/gm, "").trim();
 const pinText = `${header}${[kept, ...pins].filter(Boolean).join("\n")}\n`;
-writeFileSync(path.join(dataDir, "DEV-PINS.txt"), pinText);
+writeFileSync(path.join(dataDir, demo ? "DEMO-PINS.txt" : "DEV-PINS.txt"), pinText);
 
 const counts = Object.fromEntries(Object.entries({ ...books.ops, ...books.vault }).map(([tab, rows]) => [tab, rows.length - 1]));
-console.log(`\nLocal portal data created in .data/portal`, counts, `\n\n${pinText}\nRestart the server so it reads .env.local and the new data.`);
+console.log(`\nPortal sample data created in ${path.relative(root, dataDir)}`, counts, `\n\n${pinText}\nRestart the server so it reads the new data.`);

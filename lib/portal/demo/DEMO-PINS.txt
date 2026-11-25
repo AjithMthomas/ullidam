@@ -1,0 +1,7 @@
+Demo PINs (deployed demo with fake sample data only)
+
+Dr. Ananya Menon       598725
+Akash Mohan            568809
+Sneha Varghese         667135
+Dr. Arun Kallada       590813
+coordinator            192150

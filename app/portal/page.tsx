@@ -1,9 +1,11 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { LogoMark } from "@/components/layout/Logo";
+import { DemoBanner } from "@/components/portal/DemoBanner";
 import { SignIn } from "@/components/portal/SignIn";
 import { currentClinicianId } from "@/lib/portal/auth";
 import { listClinicianCards } from "@/lib/portal/repo/clinicians";
+import { PortalNotConfiguredError } from "@/lib/portal/env";
 import { StoreError } from "@/lib/portal/store";
 
 const NOTICES: Record<string, string> = {
@@ -15,6 +17,8 @@ const NOTICES: Record<string, string> = {
 /** Sign-in: choose your photo, then your PIN. Already signed in goes straight to Today. */
 export default function PortalSignInPage({ searchParams }: PageProps<"/portal">) {
   return (
+    <>
+    <DemoBanner />
     <div className="grid min-h-dvh place-items-center bg-canvas px-5 py-16">
       <div className="w-full max-w-3xl">
         <div className="flex items-center gap-3 text-brand">
@@ -36,6 +40,7 @@ export default function PortalSignInPage({ searchParams }: PageProps<"/portal">)
         </p>
       </div>
     </div>
+    </>
   );
 }
 
@@ -46,7 +51,12 @@ async function SignInGate({ searchParams }: { searchParams: PageProps<"/portal">
   try {
     [signedInAs, clinicians] = await Promise.all([currentClinicianId(), listClinicianCards()]);
   } catch (error) {
-    if (error instanceof StoreError) return <NotReady message={error.message} />;
+    if (error instanceof PortalNotConfiguredError) {
+      // Detail for whoever runs the deployment (Vercel logs), never for the visitor.
+      console.error("[portal] not configured:", error.detail);
+      return <NotReady />;
+    }
+    if (error instanceof StoreError) return <NotReady temporary />;
     throw error;
   }
   if (signedInAs) redirect("/portal/today");
@@ -54,11 +64,15 @@ async function SignInGate({ searchParams }: { searchParams: PageProps<"/portal">
   return <SignIn clinicians={clinicians} notice={notice ? NOTICES[notice] : undefined} />;
 }
 
-function NotReady({ message }: { message: string }) {
+function NotReady({ temporary = false }: { temporary?: boolean }) {
   return (
-    <div role="alert" className="rounded-2xl bg-surface-raised p-6 ring-1 ring-line">
-      <p className="font-medium text-ink-1">The portal&rsquo;s records aren&rsquo;t connected yet.</p>
-      <p className="mt-2 text-sm leading-relaxed text-ink-2">{message}</p>
+    <div role="status" className="rounded-2xl bg-surface-raised p-6 ring-1 ring-line">
+      <p className="font-medium text-ink-1">{temporary ? "We couldn’t reach the portal’s records just now." : "The clinician portal is being set up."}</p>
+      <p className="mt-2 text-sm leading-relaxed text-ink-2">
+        {temporary
+          ? "Nothing was lost. Please try again in a few minutes."
+          : "Sign-in opens once its secure records are connected. The practice coordinator will let you know."}
+      </p>
     </div>
   );
 }

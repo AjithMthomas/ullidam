@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Suspense, type ReactNode } from "react";
 import { LogoMark } from "@/components/layout/Logo";
+import { DemoBanner } from "@/components/portal/DemoBanner";
 import { SignOutButton, TopBar } from "@/components/portal/PortalChrome";
 import { PortalNav } from "@/components/portal/PortalNav";
 import { PortalProvider } from "@/components/portal/PortalProvider";
@@ -34,6 +35,7 @@ export default function DeskLayout({ children }: { children: ReactNode }) {
           </div>
         </aside>
         <div className="flex min-h-dvh min-w-0 flex-col">
+          <DemoBanner />
           <TopBar />
           <div id="portal-content" className="flex-1 px-5 pt-7 pb-28 sm:px-8 lg:px-12 lg:pt-10 lg:pb-16">
             {children}

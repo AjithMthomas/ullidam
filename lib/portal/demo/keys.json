@@ -1,0 +1,6 @@
+{
+  "$comment": "Demo-only keys for the fake sample data in this folder. Public by design. Never use for real records: production sets PORTAL_DATA_DRIVER=google with its own secrets.",
+  "PORTAL_SESSION_SECRET": "J2c2-UOywujGQRQsWNhYrboFrsumx_P0tk-r1x9fWJxb_iWE8HiA2q_4NI15Q7uD",
+  "RECORDS_ENCRYPTION_KEY": "ulKyRIxEkbu2WiNQuz2YBGC660U4VzHssv559IzsCgo=",
+  "PIN_PEPPER": "5sPhI1Hb7dPGVXsaFUzjJgF1sFOgDgJgMYtsIlFEyBc"
+}
