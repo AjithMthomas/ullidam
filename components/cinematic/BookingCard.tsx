@@ -6,10 +6,11 @@ import { WhatsAppLogo } from "@/components/ui/BrandIcons";
 import { ButtonExternalLink, buttonStyles } from "@/components/ui/Button";
 import { StatusPulse } from "@/components/ui/StatusPulse";
 import { placeForZone } from "@/data/diaspora";
-import { getAvailability, SCHEDULE_IS_SAMPLE, SHIFT_ORDER, SHIFTS, type Shift } from "@/data/schedule";
+import { daySlots, sampleAvailability, SHIFT_ORDER, SHIFTS, type PublicAvailability, type Shift } from "@/data/schedule";
 import type { Therapist } from "@/data/therapists";
 import { cn } from "@/lib/cn";
-import { formatDate, formatTime, IST, istDay, istInstant, useTick, useVisitorZone } from "@/lib/time";
+import { formatDate, formatTime, IST, istDay, istInstant } from "@/lib/time";
+import { useTick, useVisitorZone } from "@/lib/use-time";
 import { bookingRequestMessage, whatsappHref } from "@/lib/whatsapp";
 
 type Format = "video" | "audio";
@@ -36,15 +37,13 @@ const FORMATS: { id: Format; label: string; Icon: typeof Video }[] = [
 ];
 
 /** The next two weeks of open slots, in IST; today only offers slots at least 3 hours away. */
-function upcomingDays(therapistId: string, now: Date): Day[] {
-  const dayList = Array.from({ length: DAYS_AHEAD }, (_, i) => istDay(new Date(now.getTime() + i * 86_400_000)));
-  const rows = getAvailability(therapistId, dayList);
-  return dayList.map(({ key }) => ({
+function upcomingDays(availability: PublicAvailability, now: Date): Day[] {
+  return Array.from({ length: DAYS_AHEAD }, (_, i) => istDay(new Date(now.getTime() + i * 86_400_000))).map(({ key, weekday }) => ({
     key,
     at: istInstant(key, "12:00"),
-    slots: rows
-      .filter((row) => row.day === key)
-      .map((row) => ({ shift: row.shift, time: row.time, at: istInstant(key, row.time) }))
+    slots: daySlots(availability.weekly, availability.overrides, key, weekday)
+      .filter((slot) => slot.state === "open")
+      .map((slot) => ({ shift: slot.shift, time: slot.time, at: istInstant(key, slot.time) }))
       .filter((slot) => slot.at.getTime() > now.getTime() + MIN_NOTICE_MS),
   }));
 }
@@ -56,7 +55,7 @@ function upcomingDays(therapistId: string, now: Date): Day[] {
  * booked automatically. Dates depend on today, so they render after
  * hydration, and picks are re-checked on every tick so stale times drop out.
  */
-export function BookingCard({ therapist }: { therapist: Therapist }) {
+export function BookingCard({ therapist, availability = sampleAvailability(therapist.id) }: { therapist: Therapist; availability?: PublicAvailability }) {
   const psychiatry = therapist.trackFocus.includes("psychiatry");
   const [format, setFormat] = useState<Format>("video");
   const [chosenDay, setChosenDay] = useState<string | null>(null);
@@ -66,7 +65,7 @@ export function BookingCard({ therapist }: { therapist: Therapist }) {
   const local = zone && zone !== IST && !zone.startsWith("Etc/") && zone !== "UTC" ? zone : null;
   const place = placeForZone(local)?.split(" / ")[0];
 
-  const days = tick === null ? null : upcomingDays(therapist.id, new Date());
+  const days = tick === null ? null : upcomingDays(availability, new Date());
   const open = (key: string | null) => Boolean(key && days?.some((day) => day.key === key && day.slots.length > 0));
   const firstOpen = days?.find((day) => day.slots.length > 0) ?? null;
   const dayKey = open(chosenDay) ? chosenDay : (firstOpen?.key ?? null);
@@ -105,7 +104,7 @@ export function BookingCard({ therapist }: { therapist: Therapist }) {
           <StatusPulse status={firstOpen ? "open" : "gone"} label={nextOpenLabel} className="text-sm font-medium text-ink-2" />
         )}
         <h2 className="mt-5 font-display text-title text-brand">Book a session</h2>
-        {SCHEDULE_IS_SAMPLE ? (
+        {availability.sample ? (
           <p className="mt-2 text-sm leading-relaxed text-ink-3">
             Sample availability until live schedules launch. Our coordinator confirms one time with you.
           </p>

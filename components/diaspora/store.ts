@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from "react";
 import { cityForZone, KERALA_ZONE, placeForZone, SEGMENTS } from "@/data/diaspora";
 import { diasporaMessage, whatsappHref } from "@/lib/whatsapp";
-import { useVisitorZone } from "@/lib/time";
+import { useVisitorZone } from "@/lib/use-time";
 
 /**
  * What the visitor has chosen on /diaspora, shared by every WhatsApp action on

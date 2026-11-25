@@ -1,32 +1,12 @@
-import { useSyncExternalStore } from "react";
-import { detectTimeZone } from "@/lib/region";
-
 /**
- * Time-zone helpers shared by the diaspora page and the booking picker.
- * Everything goes through Intl with IANA zones, so half-hour zones and
- * daylight saving are handled; nothing adds hours by hand except IST, which
- * has a fixed +5:30 and no daylight saving.
+ * Time-zone helpers shared by the diaspora page, the booking picker and the
+ * clinician portal (server and browser alike; the browser-only hooks live in
+ * lib/use-time.ts). Everything goes through Intl with IANA zones, so
+ * half-hour zones and daylight saving are handled; nothing adds hours by
+ * hand except IST, which has a fixed +5:30 and no daylight saving.
  */
 export const IST = "Asia/Kolkata";
 const IST_OFFSET_MS = 330 * 60_000;
-
-const noop = () => () => {};
-
-/** The visitor's device time zone after hydration; null on the server (never from IP). */
-export function useVisitorZone(): string | null {
-  return useSyncExternalStore(noop, detectTimeZone, () => null);
-}
-
-const TICK = 15_000;
-const subscribeTick = (onChange: () => void) => {
-  const id = setInterval(onChange, TICK);
-  return () => clearInterval(id);
-};
-
-/** Changes every 15 seconds on the client (clocks stay current); null on the server and before hydration. */
-export function useTick(): number | null {
-  return useSyncExternalStore(subscribeTick, () => Math.floor(Date.now() / TICK), () => null);
-}
 
 /** "9:40 PM" in a time zone. */
 export function formatTime(zone: string, date: Date): string {

@@ -1,7 +1,8 @@
 "use client";
 
 import { KERALA_ZONE, placeForZone } from "@/data/diaspora";
-import { formatTime, useTick, useVisitorZone } from "@/lib/time";
+import { formatTime } from "@/lib/time";
+import { useTick, useVisitorZone } from "@/lib/use-time";
 
 /**
  * The hero's small clock: the visitor's time beside Kerala's, from the device

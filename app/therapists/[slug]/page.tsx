@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { ArrowLeft, BadgeCheck, GraduationCap } from "lucide-react";
 import { BookingCard } from "@/components/cinematic/BookingCard";
+import { publicAvailability, publicProfile } from "@/lib/portal/public";
 import { Container } from "@/components/layout/Container";
 import { Eyebrow, Section } from "@/components/layout/Section";
 import { Pill } from "@/components/ui/Pill";
@@ -37,8 +38,11 @@ function Block({ title, children }: { title: string; children: ReactNode }) {
 
 /** 60/40 profile: clinical authority on the left, the sticky booking station on the right. */
 export default async function TherapistProfilePage({ params }: PageProps<"/therapists/[slug]">) {
-  const therapist = findTherapist((await params).slug);
-  if (!therapist) notFound();
+  const base = findTherapist((await params).slug);
+  if (!base) notFound();
+  // Live text and schedule from the clinician portal (cached; sample data if not connected).
+  const [profile, availability] = await Promise.all([publicProfile(base.id), publicAvailability(base.id)]);
+  const therapist = profile ? { ...base, ...profile } : base;
 
   return (
     <Section className="pt-24 sm:pt-28 md:pt-32 lg:pt-36">
@@ -133,7 +137,7 @@ export default async function TherapistProfilePage({ params }: PageProps<"/thera
           </div>
 
           <aside aria-label={`Book a session with ${therapist.name}`} className="lg:sticky lg:top-28 lg:self-start">
-            <BookingCard therapist={therapist} />
+            <BookingCard therapist={therapist} availability={availability} />
           </aside>
         </div>
       </Container>

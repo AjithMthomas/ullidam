@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
 import { Funnel_Display, Funnel_Sans } from "next/font/google";
 import { CrisisRibbon } from "@/components/layout/CrisisRibbon";
 import { FloatingWhatsApp } from "@/components/layout/FloatingWhatsApp";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { PublicOnly } from "@/components/layout/PublicOnly";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { SceneSprite } from "@/components/scene/MonsoonScene";
@@ -70,15 +72,24 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           >
             Skip to content
           </a>
-          <Header />
+          {/* Suspense: on portal record pages the URL is request data (Cache Components). */}
+          <Suspense fallback={null}>
+            <PublicOnly>
+              <Header />
+            </PublicOnly>
+          </Suspense>
           <main id="main" tabIndex={-1} className="flex-1 focus-visible:outline-none">
             {children}
           </main>
-          <CrisisRibbon />
-          <Footer />
-          <FloatingWhatsApp />
-          <SceneSprite />
-          <SmoothScroll />
+          <Suspense fallback={null}>
+            <PublicOnly>
+              <CrisisRibbon />
+              <Footer />
+              <FloatingWhatsApp />
+              <SceneSprite />
+              <SmoothScroll />
+            </PublicOnly>
+          </Suspense>
           </MotionProvider>
         </IconDefaults>
       </body>

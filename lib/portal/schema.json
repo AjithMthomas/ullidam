@@ -1,0 +1,219 @@
+{
+  "$comment": "The portal database: two Google spreadsheets, one tab per table, row 1 = these headers (docs/specs/portal.md section 6). Shared by the app (lib/portal/schema.ts), the seed script and the Sheets setup script. Encrypted columns hold v1:<iv>:<ciphertext>:<tag>. Sign-in secrets live in the Vault (Clinician_Auth), never in the coordinator-editable Operations sheet. Revised after the fresh review (spec section 14).",
+  "books": {
+    "ops": "Ullidam Operations",
+    "vault": "Ullidam Clinical Vault"
+  },
+  "tabs": {
+    "Clinicians": {
+      "book": "ops",
+      "columns": [
+        "Clinician_ID",
+        "Display_Name",
+        "Slug",
+        "Title",
+        "Photo_URL",
+        "Role",
+        "Bio",
+        "Approach",
+        "Specialties",
+        "Languages",
+        "Draft_Bio",
+        "Draft_Approach",
+        "Draft_Specialties",
+        "Draft_Languages",
+        "Profile_Status",
+        "Profile_Note",
+        "Active",
+        "Row_Version",
+        "Updated_At"
+      ],
+      "encrypted": []
+    },
+    "Clinician_Auth": {
+      "book": "vault",
+      "columns": [
+        "Clinician_ID",
+        "PIN_Hash",
+        "Failed_Attempts",
+        "Locked_Until",
+        "Session_Version",
+        "TOTP_Secret",
+        "Setup_Code_Hash",
+        "Setup_Code_Expires",
+        "Row_Version",
+        "Updated_At"
+      ],
+      "encrypted": [
+        "TOTP_Secret"
+      ]
+    },
+    "Weekly_Pattern": {
+      "book": "ops",
+      "columns": [
+        "Therapist_ID",
+        "Weekday",
+        "Shift",
+        "Active",
+        "Row_Version",
+        "Updated_At"
+      ],
+      "encrypted": []
+    },
+    "Therapist_Schedule": {
+      "book": "ops",
+      "columns": [
+        "Therapist_ID",
+        "Date",
+        "Slot_Time_IST",
+        "Shift",
+        "Is_Available",
+        "Booking_ID",
+        "Reason",
+        "Row_Version",
+        "Updated_At"
+      ],
+      "encrypted": []
+    },
+    "Bookings_Log": {
+      "book": "ops",
+      "columns": [
+        "Booking_ID",
+        "Created_At",
+        "Client_ID",
+        "Client_Name",
+        "WhatsApp_Number",
+        "Service_Track",
+        "Format",
+        "Country_Timezone",
+        "Therapist_ID",
+        "Primary_Slot",
+        "Backup_Slot",
+        "Confirmed_Slot",
+        "Status",
+        "Meeting_Link",
+        "Clinician_Note",
+        "Duration_Min",
+        "Cancelled_By",
+        "Rescheduled_From",
+        "Row_Version",
+        "Updated_At"
+      ],
+      "encrypted": [
+        "Client_Name",
+        "WhatsApp_Number",
+        "Clinician_Note"
+      ]
+    },
+    "Clients": {
+      "book": "vault",
+      "columns": [
+        "Client_ID",
+        "Clinician_ID",
+        "Alias",
+        "Full_Name",
+        "WhatsApp",
+        "WhatsApp_Hash",
+        "Email",
+        "DOB",
+        "Gender",
+        "Country",
+        "Time_Zone",
+        "Language",
+        "Track",
+        "Referral",
+        "Consent_Date",
+        "Consent_Method",
+        "Consent_Recorded_By",
+        "Consent_Withdrawn_At",
+        "Emergency_Contact",
+        "Status",
+        "Risk_Level",
+        "Risk_Updated_At",
+        "Last_Contact_At",
+        "Tags",
+        "Archived_Reason",
+        "Retention_Until",
+        "Created_At",
+        "Row_Version",
+        "Updated_At"
+      ],
+      "encrypted": [
+        "Alias",
+        "Full_Name",
+        "WhatsApp",
+        "Email",
+        "DOB",
+        "Gender",
+        "Country",
+        "Time_Zone",
+        "Language",
+        "Track",
+        "Referral",
+        "Emergency_Contact",
+        "Risk_Level",
+        "Tags",
+        "Archived_Reason"
+      ]
+    },
+    "Clinical_Records": {
+      "book": "vault",
+      "columns": [
+        "Record_ID",
+        "Client_ID",
+        "Therapist_ID",
+        "Author_ID",
+        "Booking_ID",
+        "Session_Date",
+        "Format",
+        "Note_Format",
+        "Note_Body",
+        "Diagnosis_Code",
+        "Diagnosis_Label",
+        "Diagnosis_Status",
+        "Modalities",
+        "Risk_Level",
+        "Risk_Notes",
+        "PHQ9",
+        "PHQ9_Item9",
+        "GAD7",
+        "Follow_Up_Due",
+        "Status",
+        "Signed_At",
+        "Parent_Record_ID",
+        "Addendum_Reason",
+        "Error_Reason",
+        "Created_At",
+        "Row_Version",
+        "Updated_At"
+      ],
+      "encrypted": [
+        "Note_Body",
+        "Diagnosis_Code",
+        "Diagnosis_Label",
+        "Diagnosis_Status",
+        "Modalities",
+        "Risk_Level",
+        "Risk_Notes",
+        "PHQ9",
+        "PHQ9_Item9",
+        "GAD7",
+        "Addendum_Reason",
+        "Error_Reason"
+      ]
+    },
+    "Audit_Log": {
+      "book": "vault",
+      "columns": [
+        "Timestamp",
+        "Clinician_ID",
+        "Action",
+        "Entity",
+        "Entity_ID",
+        "IP_Hash",
+        "Result"
+      ],
+      "encrypted": []
+    }
+  }
+}

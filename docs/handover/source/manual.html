@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Ullidam Clinician Portal: User Manual</title>
+<style>
+  /* The website's own typefaces (Funnel Display, Funnel Sans; SIL Open Font Licence), copied from the build. */
+  @font-face { font-family: "Funnel Display"; src: url("fonts/FunnelDisplay-latin.woff2") format("woff2"); font-weight: 300 800; }
+  @font-face { font-family: "Funnel Sans"; src: url("fonts/FunnelSans-latin.woff2") format("woff2"); font-weight: 300 800; }
+  @page { size: A4; margin: 18mm 17mm 20mm; }
+  @page cover { margin: 0; }
+  :root {
+    --green: #1F3B2D; --green-soft: #34513f; --leaf: #D7E59B; --leaf-soft: #EEF3D2;
+    --mist: #F4F5EF; --sage: #A8BD8E; --ink: #17211B; --ink-2: #3E4A43; --ink-3: #66706A;
+    --line: #D9DECF; --warn: #A4402B; --warn-soft: #F7E7E2; --gold: #E2AE5C;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; font-family: "Funnel Sans", sans-serif; color: var(--ink); font-size: 11.2pt; line-height: 1.55; }
+  h1, h2, h3 { font-family: "Funnel Display", sans-serif; color: var(--green); line-height: 1.2; margin: 0; }
+  h2 { font-size: 22pt; font-weight: 600; letter-spacing: -0.01em; }
+  h3 { font-size: 13.5pt; font-weight: 600; margin-top: 18pt; }
+  p { margin: 6pt 0; }
+  .lead { font-size: 12.5pt; color: var(--ink-2); max-width: 150mm; }
+  .chapter { break-before: page; }
+  .chapter-head { display: flex; align-items: center; gap: 10pt; margin-bottom: 10pt; }
+  .num { display: inline-grid; place-items: center; width: 28pt; height: 28pt; border-radius: 50%; background: var(--green); color: #fff; font-weight: 600; font-size: 12pt; flex: none; }
+  figure { margin: 10pt 0 12pt; break-inside: avoid; }
+  figure img { width: 100%; display: block; border: 1px solid var(--line); border-radius: 8pt; }
+  figcaption { font-size: 9.5pt; color: var(--ink-3); margin-top: 4pt; }
+  .phones { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10pt; break-inside: avoid; }
+  .phones img { height: 92mm; width: auto; max-width: 100%; margin: 0 auto; }
+  .phones figure { margin: 0; text-align: center; }
+  ol.steps { counter-reset: s; list-style: none; padding: 0; margin: 8pt 0; }
+  ol.steps > li { counter-increment: s; position: relative; padding: 3pt 0 3pt 30pt; break-inside: avoid; }
+  ol.steps > li::before { content: counter(s); position: absolute; left: 0; top: 2pt; width: 20pt; height: 20pt; border-radius: 50%; background: var(--leaf); color: var(--green); font-weight: 700; font-size: 9.5pt; display: grid; place-items: center; }
+  ul { padding-left: 16pt; margin: 6pt 0; }
+  li { margin: 2pt 0; }
+  .btn { display: inline-block; padding: 0 7pt; border-radius: 99pt; background: var(--green); color: #fff; font-size: 9.5pt; font-weight: 600; line-height: 15pt; white-space: nowrap; }
+  .btn.light { background: #fff; color: var(--green); border: 1px solid var(--sage); }
+  .callout { border-radius: 8pt; padding: 9pt 12pt; margin: 10pt 0; break-inside: avoid; }
+  .tip { background: var(--leaf-soft); border-left: 4pt solid var(--sage); }
+  .important { background: var(--warn-soft); border-left: 4pt solid var(--warn); }
+  .callout strong:first-child { display: block; margin-bottom: 2pt; color: var(--green); }
+  .important strong:first-child { color: var(--warn); }
+  table { width: 100%; border-collapse: collapse; margin: 8pt 0; font-size: 10.3pt; break-inside: auto; }
+  th { text-align: left; background: var(--green); color: #fff; font-weight: 600; padding: 6pt 8pt; }
+  td { padding: 6pt 8pt; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr { break-inside: avoid; }
+  tr:nth-child(even) td { background: #FAFBF7; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14pt; }
+  .muted { color: var(--ink-3); font-size: 9.8pt; }
+
+  /* Cover */
+  .cover { page: cover; height: 297mm; background: var(--green); color: #fff; padding: 34mm 24mm 22mm; display: flex; flex-direction: column; }
+  .cover .brand { display: flex; align-items: center; gap: 10pt; font-size: 15pt; letter-spacing: 0.18em; font-weight: 600; }
+  .cover .arch { width: 22pt; height: 28pt; border: 2.5pt solid var(--leaf); border-bottom: none; border-radius: 12pt 12pt 0 0; position: relative; }
+  .cover .arch::after { content: ""; position: absolute; left: 50%; top: 52%; width: 4pt; height: 4pt; margin-left: -2pt; border-radius: 50%; background: var(--gold); }
+  .cover h1 { color: #fff; font-size: 40pt; font-weight: 600; margin-top: 52mm; letter-spacing: -0.02em; }
+  .cover .sub { font-size: 16pt; color: var(--leaf); margin-top: 8pt; }
+  .cover .for { font-size: 12.5pt; color: #E6ECDF; margin-top: 18pt; max-width: 120mm; }
+  .cover .meta { margin-top: auto; font-size: 10pt; color: #CFD8C8; border-top: 1px solid rgba(255,255,255,.25); padding-top: 10pt; }
+  .toc { columns: 2; column-gap: 14mm; margin-top: 10pt; }
+  .toc div { display: flex; gap: 8pt; padding: 5pt 0; border-bottom: 1px dotted var(--line); break-inside: avoid; }
+  .toc b { color: var(--green); width: 16pt; }
+  .quick td:first-child { font-weight: 600; color: var(--green); width: 38%; }
+  /* Printed in two parts so page numbers skip the cover (see build-manual.mjs). */
+  body.part-cover section:not(.cover) { display: none; }
+  body.part-body .cover { display: none; }
+  body.part-body section.chapter:first-of-type { break-before: auto; }
+</style>
+<script>
+  const part = new URLSearchParams(location.search).get("part");
+  document.addEventListener("DOMContentLoaded", () => part && document.body.classList.add(`part-${part}`));
+</script>
+</head>
+<body>
+
+<!-- ============================ COVER ============================ -->
+<section class="cover">
+  <div class="brand"><span class="arch"></span> ULLIDAM</div>
+  <h1>Clinician Portal</h1>
+  <div class="sub">User manual</div>
+  <p class="for">A simple, step-by-step guide for Ullidam&rsquo;s clinicians and the practice coordinator: signing in, your day, bookings, schedule, client records, session notes and more.</p>
+  <div class="meta">Version 1.0 &middot; November 2026<br />The screens in this manual show made-up sample people. No real client information appears in it.</div>
+</section>
+
+<!-- ============================ START ============================ -->
+<section class="chapter">
+  <h2>Before you start</h2>
+  <div class="callout important">
+    <strong>Important: practice version</strong>
+    This version of the portal is for training and practice with sample data. Please <b>do not enter real client information yet</b>. Ullidam will tell you when the final security steps are complete (an extra sign-in check with an authenticator app, automatic backups and an independent security review).
+  </div>
+
+  <h3>What is the portal?</h3>
+  <p>The portal is Ullidam&rsquo;s private website for clinicians. In one place you can:</p>
+  <ul>
+    <li>see today&rsquo;s sessions and join them,</li>
+    <li>keep your working hours up to date (clients book from these),</li>
+    <li>keep your clients&rsquo; records and session notes, safely,</li>
+    <li>see how your practice is going, and keep your public profile current.</li>
+  </ul>
+  <p>The practice coordinator uses the same portal to enter and confirm bookings.</p>
+
+  <h3>What you need</h3>
+  <ul>
+    <li>A phone, tablet or computer with internet. Any modern browser works (Chrome, Safari, Edge).</li>
+    <li>The portal address. The coordinator will give it to you (for example <b>ullidam.com/portal</b>).</li>
+    <li>Your own 6-digit PIN. The first time, the coordinator gives you a one-time <b>setup code</b> to create it.</li>
+  </ul>
+
+  <h3>Words used in this manual</h3>
+  <table>
+    <tr><th style="width:30%">Word</th><th>What it means</th></tr>
+    <tr><td>PIN</td><td>Your secret 6-digit number for signing in. Only you know it.</td></tr>
+    <tr><td>Setup code</td><td>A one-time code from the coordinator, used to create a PIN (first time, or if you forget it). Works once, for 24 hours.</td></tr>
+    <tr><td>Booking</td><td>A session a client has asked for or that has been confirmed.</td></tr>
+    <tr><td>Request</td><td>A booking that is waiting for the coordinator to confirm a time.</td></tr>
+    <tr><td>Slot</td><td>One session time in your schedule, for example 6:30 PM.</td></tr>
+    <tr><td>Shift</td><td>A part of the day: Morning, Afternoon or Evening.</td></tr>
+    <tr><td>IST</td><td>India Standard Time. All schedule times in the portal are India time.</td></tr>
+    <tr><td>Draft / Sign</td><td>A note you are still writing is a draft. When you sign it, it is locked for good.</td></tr>
+    <tr><td>Addendum</td><td>A dated addition to a signed note, used instead of changing it.</td></tr>
+  </table>
+</section>
+
+<section class="chapter">
+  <h2>Contents</h2>
+  <div class="toc">
+    <div><b>1</b> Six rules that keep records safe</div>
+    <div><b>2</b> Signing in</div>
+    <div><b>3</b> Finding your way around</div>
+    <div><b>4</b> Today: your home page</div>
+    <div><b>5</b> Bookings</div>
+    <div><b>6</b> Your schedule</div>
+    <div><b>7</b> Clients</div>
+    <div><b>8</b> Session notes</div>
+    <div><b>9</b> Analytics</div>
+    <div><b>10</b> Your profile</div>
+    <div><b>11</b> Settings</div>
+    <div><b>12</b> For the coordinator</div>
+    <div><b>13</b> Questions and problems</div>
+    <div><b>14</b> Quick reference</div>
+  </div>
+
+  <div class="chapter-head" style="margin-top:22pt"><span class="num">1</span><h2>Six rules that keep records safe</h2></div>
+  <p class="lead">Our clients trust us with private things. These six habits protect them, and you.</p>
+  <ol class="steps">
+    <li><b>Your PIN is yours alone.</b> Never share it, not even with the coordinator. Nobody at Ullidam will ever ask for it.</li>
+    <li><b>Lock the screen when you step away.</b> Press <span class="btn light">Lock now</span> at the top of the screen. The portal also locks itself after 15 quiet minutes.</li>
+    <li><b>In public places, turn on <span class="btn light">Hide names</span>.</b> Client names and details are blurred until you turn it off.</li>
+    <li><b>On a shared computer, always sign out</b> when you finish.</li>
+    <li><b>Never photograph or screenshot client information.</b></li>
+    <li><b>Lost your phone?</b> Tell the coordinator at once, and use <b>Sign out on every device</b> (Settings) from another device.</li>
+  </ol>
+  <div class="callout tip">
+    <strong>Good to know</strong>
+    Only you can see your clients and notes. The coordinator cannot read your notes. Names, phone numbers and notes are stored in a scrambled (encrypted) form, and every sign-in and record you open is logged.
+  </div>
+</section>
+
+<!-- ============================ 2. SIGN IN ============================ -->
+<section class="chapter">
+  <div class="chapter-head"><span class="num">2</span><h2>Signing in</h2></div>
+
+  <h3>The first time (with a setup code)</h3>
+  <ol class="steps">
+    <li>Ask the coordinator for your <b>setup code</b>. It works once, for 24 hours.</li>
+    <li>Open the portal address and tap <b>your photo</b>.</li>
+    <li>Tap <b>First time here? Use your setup code</b>.</li>
+    <li>Type the setup code, then choose a 6-digit PIN and type it again.</li>
+    <li>Tap <span class="btn">Set PIN and sign in</span>. You are in.</li>
+  </ol>
+  <figure><img src="img/02b-setup.jpg" alt="" /><figcaption>First sign-in: the setup code, then your new PIN twice.</figcaption></figure>
+  <div class="callout tip"><strong>Choosing a PIN</strong> Pick 6 digits you will remember but others cannot guess. Runs and repeats like 123456 or 111111 are not accepted.</div>
+</section>
+
+<section class="chapter">
+  <h3 style="margin-top:0">Every day</h3>
+  <ol class="steps">
+    <li>Open the portal and tap <b>your photo</b>.</li>
+    <li>Type your 6-digit PIN. Each box fills as you type.</li>
+    <li>Tap <span class="btn">Sign in</span>. Your Today page opens.</li>
+  </ol>
+  <div class="two">
+    <figure><img src="img/01-signin.jpg" alt="" /><figcaption>Step 1: choose your photo.</figcaption></figure>
+    <figure><img src="img/02-pin.jpg" alt="" /><figcaption>Step 2: type your PIN and sign in.</figcaption></figure>
+  </div>
+
+  <h3>If something goes wrong</h3>
+  <table>
+    <tr><th style="width:38%">What happened</th><th>What to do</th></tr>
+    <tr><td>I forgot my PIN</td><td>Ask the coordinator for a new setup code, then use <b>First time here?</b> to set a new PIN.</td></tr>
+    <tr><td>&ldquo;Too many attempts&rdquo;</td><td>After 5 wrong PINs your account rests for 15 minutes, to keep records safe. Wait, then try again.</td></tr>
+    <tr><td>&ldquo;You were signed out&rdquo;</td><td>This happens after 20 quiet minutes, or 12 hours after you signed in. Just sign in again. Saved work is kept.</td></tr>
+  </table>
+</section>
+
+<!-- ============================ 3. AROUND ============================ -->
+<section class="chapter">
+  <div class="chapter-head"><span class="num">3</span><h2>Finding your way around</h2></div>
+  <p class="lead">The portal looks the same for every clinician. Only the information is yours.</p>
+  <h3>On a computer</h3>
+  <p>The menu is on the <b>left</b>: Today, Bookings, Schedule, Clients, Analytics, Profile and Settings. Your name and <b>Sign out</b> are at the bottom of the menu.</p>
+  <h3>On a phone</h3>
+  <p>The menu is at the <b>bottom</b>: Today, Bookings, Schedule, Clients and <b>More</b>. Tap More for Analytics, Profile, Settings and Sign out.</p>
+  <div class="phones">
+    <figure><img src="img/m1-today-phone.jpg" alt="" /><figcaption>Today on a phone.</figcaption></figure>
+    <figure><img src="img/m2-more-phone.jpg" alt="" /><figcaption>The More page.</figcaption></figure>
+    <figure><img src="img/m3-schedule-phone.jpg" alt="" /><figcaption>Schedule on a phone.</figcaption></figure>
+  </div>
+  <h3>Two buttons at the top, on every page</h3>
+  <ul>
+    <li><span class="btn light">Hide names</span> blurs client names and contact details. Tap again to show them.</li>
+    <li><span class="btn light">Lock now</span> hides everything until you type your PIN. Use it whenever you step away.</li>
+  </ul>
+</section>
+
+<section class="chapter">
+  <div class="two">
+    <figure><img src="img/04-hidenames.jpg" alt="" /><figcaption>Hide names on: client names are blurred.</figcaption></figure>
+    <figure><img src="img/18-lock.jpg" alt="" /><figcaption>Locked: type your PIN to continue where you were.</figcaption></figure>
+  </div>
+
+  <!-- ============================ 4. TODAY ============================ -->
+  <div class="chapter-head" style="margin-top:16pt"><span class="num">4</span><h2>Today: your home page</h2></div>
+  <p class="lead">Today opens after you sign in. It shows your day at a glance.</p>
+  <figure><img src="img/03-today.jpg" alt="" /><figcaption>The Today page.</figcaption></figure>
+</section>
+
+<section class="chapter">
+  <h3 style="margin-top:0">The four numbers</h3>
+  <table>
+    <tr><th style="width:38%">Number</th><th>What it means</th></tr>
+    <tr><td>Sessions this week</td><td>Sessions you have completed since Monday.</td></tr>
+    <tr><td>Upcoming, next 7 days</td><td>Confirmed sessions in the coming week.</td></tr>
+    <tr><td>Active clients</td><td>Clients whose status is Active.</td></tr>
+    <tr><td>Attendance, 90 days</td><td>Of the sessions booked in the last 90 days, how many the client attended.</td></tr>
+  </table>
+  <h3>Today&rsquo;s sessions</h3>
+  <p>Each session shows the time in India time and, for clients abroad, their own local time. Then:</p>
+  <ul>
+    <li><span class="btn">Join</span> opens the video call (for video sessions).</li>
+    <li><span class="btn">Call</span> phones the client (for audio sessions).</li>
+    <li>The green WhatsApp button opens a chat with the client, for example if they are late.</li>
+    <li><b>Record</b> opens the client&rsquo;s record.</li>
+  </ul>
+  <h3>Needs attention</h3>
+  <p>A short list of things to do: sessions to mark as completed, notes still to write, clients at risk who have not been contacted for 14 days, and follow-ups that are due. Each item has a link that takes you straight there.</p>
+</section>
+
+<!-- ============================ 5. BOOKINGS ============================ -->
+<section class="chapter">
+  <div class="chapter-head"><span class="num">5</span><h2>Bookings</h2></div>
+  <p class="lead">Clients message Ullidam on WhatsApp. The coordinator enters the request and confirms a time with the client. You then see it here.</p>
+  <p>Bookings has three tabs: <b>Requests</b> (waiting for the coordinator), <b>Upcoming</b> and <b>Past</b>.</p>
+  <figure><img src="img/05-bookings-upcoming.jpg" alt="" /><figcaption>Upcoming sessions, with the client&rsquo;s own time and the video link.</figcaption></figure>
+  <h3>Add or change the video link</h3>
+  <ol class="steps">
+    <li>Open <b>Upcoming</b> and find the session.</li>
+    <li>Tap <b>Add video link</b>, paste the link (it must start with https://) and tap <span class="btn">Save</span>.</li>
+  </ol>
+</section>
+
+<section class="chapter">
+  <h3 style="margin-top:0">After a session</h3>
+  <ol class="steps">
+    <li>Open <b>Past</b> (or follow the link from Today).</li>
+    <li>Tap <span class="btn">Completed</span> if the session happened, or <b>No-show</b> if the client did not come. These buttons appear once the session time has started.</li>
+    <li>Then write the session note (chapter 8).</li>
+  </ol>
+  <h3>Private note and rescheduling</h3>
+  <ul>
+    <li><b>Private note</b>: a short note on the booking that only you can see.</li>
+    <li><b>Ask to reschedule</b>: write why the session needs moving. The coordinator sees it and arranges a new time with the client.</li>
+  </ul>
+  <figure><img src="img/06b-booking-note.jpg" alt="" /><figcaption>Writing a private note on a booking.</figcaption></figure>
+</section>
+
+<!-- ============================ 6. SCHEDULE ============================ -->
+<section class="chapter">
+  <div class="chapter-head"><span class="num">6</span><h2>Your schedule</h2></div>
+  <p class="lead">Your schedule decides which times clients can choose on your public profile page. Changes appear there within a minute. All times are India time.</p>
+  <figure><img src="img/07-schedule.jpg" alt="" /><figcaption>The next two weeks, day by day.</figcaption></figure>
+  <table>
+    <tr><th style="width:38%">What you see</th><th>Meaning</th></tr>
+    <tr><td>White button, green outline</td><td>Open: clients can book this time.</td></tr>
+    <tr><td>Filled green, with a first name</td><td>Booked by that client. It cannot be blocked here.</td></tr>
+    <tr><td>Dotted outline</td><td>Blocked for that day, or not one of your usual hours.</td></tr>
+  </table>
+</section>
+
+<section class="chapter">
+  <h3 style="margin-top:0">Change one day</h3>
+  <ul>
+    <li><b>Block or open a single time:</b> tap it. Tap again to undo.</li>
+    <li><b>Close a whole day:</b> tap <b>Close day</b> on that day. Tap <b>Reopen day</b> to undo. Booked sessions stay booked.</li>
+  </ul>
+  <h3>Your usual week</h3>
+  <p>Set which shifts you normally work. Every day follows this unless you change that day. A filled green button means you work that shift; tap it to switch it on or off.</p>
+  <figure><img src="img/08-schedule-week.jpg" alt="" /><figcaption>Your usual week and Leave.</figcaption></figure>
+  <h3>Going on leave</h3>
+  <ol class="steps">
+    <li>In <b>Leave</b>, choose the first and last day (up to 60 days).</li>
+    <li>Optionally change &ldquo;Shown as&rdquo; (for example &ldquo;Conference&rdquo;).</li>
+    <li>Tap <span class="btn">Add leave</span>. Those days close. Sessions already booked stay booked: ask the coordinator to move them.</li>
+  </ol>
+</section>
+
+<!-- ============================ 7. CLIENTS ============================ -->
+<section class="chapter">
+  <div class="chapter-head"><span class="num">7</span><h2>Clients</h2></div>
+  <p class="lead">Your clients only. Search by name or alias, and filter by status (Active, Paused, Discharged, Archived).</p>
+  <figure><img src="img/09-clients.jpg" alt="" /><figcaption>The client list, with each client&rsquo;s last and next session.</figcaption></figure>
+  <h3>Add a client</h3>
+  <ol class="steps">
+    <li>Tap <span class="btn">Add client</span>.</li>
+    <li>Fill in the details. The <b>alias</b> is a short name only you see in lists (for example &ldquo;R.K.&rdquo;), so full names are not on screen all the time.</li>
+    <li>Record <b>consent</b>: the date and how it was given. You cannot save without it.</li>
+    <li>Tap <span class="btn">Add client</span>.</li>
+  </ol>
+  <div class="callout tip"><strong>Good to know</strong> Ullidam sees adults only. The portal will not save anyone under 18. Bookings with the same WhatsApp number are linked to the client automatically.</div>
+</section>
+
+<section class="chapter">
+  <figure><img src="img/11-client-new.jpg" alt="" /><figcaption>Adding a client.</figcaption></figure>
+  <h3>The client record</h3>
+  <p>Tap a client to open their record. It has four parts:</p>
+  <ul>
+    <li><b>Session notes</b>: start a new note, and see all notes, newest first.</li>
+    <li><b>Sessions</b>: all their bookings, with a <b>Write note</b> link where one is missing.</li>
+    <li><b>Details</b>: contact information. Tap <b>Edit details</b> to change it, or <b>Log contact today</b> after you speak to them.</li>
+    <li><b>Status</b>: Active, Paused, Discharged or Archived. Archiving needs a reason; nothing is ever deleted.</li>
+  </ul>
+</section>
+
+<section class="chapter">
+  <figure><img src="img/10-client-record.jpg" alt="" /><figcaption>A client record: notes on the left, details and status on the right.</figcaption></figure>
+  <div class="callout important"><strong>Clients at risk</strong> A client marked Moderate or High risk should have an emergency contact. The record reminds you if it is missing.</div>
+
+  <!-- ============================ 8. NOTES ============================ -->
+  <div class="chapter-head" style="margin-top:14pt"><span class="num">8</span><h2>Session notes</h2></div>
+  <h3>Start a note</h3>
+  <ol class="steps">
+    <li>Open the client&rsquo;s record.</li>
+    <li>Under <b>Session notes</b>, check the date, choose Video or Audio call, and pick a format: <b>SOAP</b>, <b>DAP</b> or <b>Free text</b>.</li>
+    <li>Tap <span class="btn">Start note</span>.</li>
+  </ol>
+</section>
+
+<section class="chapter">
+  <h3 style="margin-top:0">Write the note</h3>
+  <p>Fill in the boxes. Below them you can add a diagnosis (start typing an ICD-11 code or choose from the list), the approaches you used, the risk level, scores (PHQ-9, GAD-7) and a follow-up date.</p>
+  <figure><img src="img/12-note-editor.jpg" alt="" /><figcaption>A draft note. The top line shows whether it is saved.</figcaption></figure>
+  <h3>Saving happens by itself</h3>
+  <p>Your draft saves 25 seconds after you stop typing, when you move to another box, and when you tap <span class="btn light">Save draft</span>. The top line says <b>Saved</b> with the time, or <b>Not saved yet</b>.</p>
+  <div class="callout important"><strong>Don&rsquo;t close the page while it says &ldquo;Not saved yet&rdquo;</strong> Tap Save draft first, and check your internet connection.</div>
+</section>
+
+<section class="chapter">
+  <figure><img src="img/12b-note-risk.jpg" alt="" /><figcaption>Approaches used, risk level, scores and follow-up date.</figcaption></figure>
+  <h3>Sign the note</h3>
+  <ol class="steps">
+    <li>When the note is complete, tap <span class="btn">Sign note</span> and confirm.</li>
+    <li>The note is now <b>locked for good</b>. This protects the record.</li>
+  </ol>
+  <div class="callout important"><strong>High risk</strong> If you choose High risk, or the PHQ-9 item 9 score is above 0, the portal shows the practice&rsquo;s safety steps when you sign: contact the client today, agree a safety plan, share crisis numbers for their country, inform the clinical lead, and if there is immediate danger contact local emergency services. (If item 9 is above 0, you must choose a risk level before signing.)</div>
+</section>
+
+<section class="chapter">
+  <h3 style="margin-top:0">Changing a signed note</h3>
+  <ul>
+    <li><b>To add or correct something:</b> open the note, write an <b>addendum</b> with the reason, and tap <span class="btn">Add addendum</span>. It is dated and shown under the note.</li>
+    <li><b>If the note was written by mistake</b> (for example, for the wrong client): tap <b>This note was written in error</b>, give the reason and confirm. The note stays visible, clearly marked. Nothing is deleted.</li>
+  </ul>
+  <div class="two">
+    <figure><img src="img/13-note-signed.jpg" alt="" /><figcaption>A signed note.</figcaption></figure>
+    <figure><img src="img/13b-addendum.jpg" alt="" /><figcaption>Adding an addendum.</figcaption></figure>
+  </div>
+
+  <!-- ============================ 9. ANALYTICS ============================ -->
+  <div class="chapter-head" style="margin-top:12pt"><span class="num">9</span><h2>Analytics</h2></div>
+  <p class="lead">How your practice is going, from your own sessions only. Weeks start on Monday.</p>
+</section>
+
+<section class="chapter">
+  <figure><img src="img/15-analytics-charts.jpg" alt="" /><figcaption>Charts in Analytics.</figcaption></figure>
+  <table>
+    <tr><th style="width:38%">Chart or number</th><th>What it shows</th></tr>
+    <tr><td>Hours this month</td><td>Time spent in completed sessions this month.</td></tr>
+    <tr><td>Schedule booked</td><td>Of the times you offered, how many were booked (last 4 weeks, next 4 weeks).</td></tr>
+    <tr><td>Sessions per week</td><td>Completed sessions and no-shows for each of the last 12 weeks.</td></tr>
+    <tr><td>Attendance</td><td>The share of booked sessions attended, week by week.</td></tr>
+    <tr><td>New and returning clients</td><td>Each month: first sessions (new) and later ones (returning).</td></tr>
+    <tr><td>When you work</td><td>Which days and shifts most of your sessions happen. Darker means more.</td></tr>
+    <tr><td>Track mix / Where your clients are</td><td>Your active clients by type of care, and by country.</td></tr>
+    <tr><td>Outcome trends</td><td>Average change in PHQ-9 and GAD-7 scores between a client&rsquo;s first and latest score. A minus number means fewer symptoms.</td></tr>
+  </table>
+</section>
+
+<!-- ============================ 10. PROFILE ============================ -->
+<section class="chapter">
+  <div class="chapter-head"><span class="num">10</span><h2>Your profile</h2></div>
+  <p class="lead">What visitors see on your page on the Ullidam website.</p>
+  <ol class="steps">
+    <li>Edit your bio, how you work, your specialties and languages (one per line). The preview on the right shows how it will look.</li>
+    <li>Tap <span class="btn">Send for review</span>.</li>
+    <li>The coordinator reviews it. Once approved, your public page updates. If it comes back as <b>Returned</b>, read the note, make the change and send again.</li>
+  </ol>
+  <figure><img src="img/16-profile.jpg" alt="" /><figcaption>Editing your profile, with a live preview.</figcaption></figure>
+</section>
+
+<!-- ============================ 11. SETTINGS ============================ -->
+<section class="chapter">
+  <div class="chapter-head"><span class="num">11</span><h2>Settings</h2></div>
+  <h3>Change your PIN</h3>
+  <ol class="steps">
+    <li>Type your current PIN.</li>
+    <li>Type your new PIN twice.</li>
+    <li>Tap <span class="btn">Change PIN</span>. Any other phone or computer you were signed in on is signed out.</li>
+  </ol>
+  <h3>Sign out on every device</h3>
+  <p>If you lost a phone or used a shared computer, tap <b>Sign out on every device</b>. Every device, including this one, is signed out at once.</p>
+  <figure><img src="img/17-settings.jpg" alt="" /><figcaption>Settings.</figcaption></figure>
+</section>
+
+<!-- ============================ 12. COORDINATOR ============================ -->
+<section class="chapter">
+  <div class="chapter-head"><span class="num">12</span><h2>For the coordinator</h2></div>
+  <p class="lead">The coordinator signs in the same way (tap <b>Practice Coordinator</b>, then your PIN) and sees the <b>Desk</b>. The coordinator does not see clients&rsquo; records or notes.</p>
+  <h3>Enter a new booking request</h3>
+  <ol class="steps">
+    <li>When a client messages on WhatsApp, fill in <b>New booking request</b>: the clinician, the client&rsquo;s name and WhatsApp number (with country code), the type of care, video or audio, and the session length.</li>
+    <li>For clients abroad, type their time zone as a city, for example <b>Asia/Dubai</b> or <b>Europe/London</b>. Leave it empty for India.</li>
+    <li>Choose the client&rsquo;s preferred time and a backup time (India time).</li>
+    <li>Tap <span class="btn">Add booking request</span>.</li>
+  </ol>
+  <figure><img src="img/c1-desk.jpg" alt="" /><figcaption>The coordinator&rsquo;s Desk: entering a booking request.</figcaption></figure>
+</section>
+
+<section class="chapter">
+  <h3 style="margin-top:0">Confirm a time</h3>
+  <ol class="steps">
+    <li>In <b>Requests to confirm</b>, each request shows the preferred and backup times, in India time and in the client&rsquo;s own time.</li>
+    <li>Agree a time with the client on WhatsApp, then tap <span class="btn">Confirm this time</span> under it. The time is now held in the clinician&rsquo;s schedule.</li>
+    <li>If a time says <b>No longer open</b>, it has been taken or blocked. Use the other time, or open <b>New times or cancel</b> to enter new times.</li>
+  </ol>
+  <figure><img src="img/c2-requests.jpg" alt="" /><figcaption>Requests waiting for a confirmed time.</figcaption></figure>
+  <h3>Cancel a session</h3>
+  <p>In <b>Upcoming sessions</b>, tap <b>Cancel</b> next to a session. The time opens again for other clients.</p>
+</section>
+
+<section class="chapter">
+  <h3 style="margin-top:0">Review profile changes</h3>
+  <p>When a clinician sends their profile for review, it appears in <b>Profile changes to review</b>. Read it, then tap <span class="btn">Approve and publish</span>, or write a short note and tap <b>Return</b>.</p>
+  <h3>Give a clinician a setup code</h3>
+  <ol class="steps">
+    <li>In <b>Sign-in codes</b>, tap <span class="btn light">Issue setup code</span> next to the clinician and confirm.</li>
+    <li>The code appears once. Share it <b>privately</b>: by phone or in person, never in a group chat.</li>
+    <li>The clinician uses it within 24 hours to set their own PIN (chapter 2). Use this too when a clinician forgets their PIN.</li>
+  </ol>
+  <figure><img src="img/c4-codes.jpg" alt="" /><figcaption>Sign-in codes for each clinician.</figcaption></figure>
+</section>
+
+<!-- ============================ 13. FAQ ============================ -->
+<section class="chapter">
+  <div class="chapter-head"><span class="num">13</span><h2>Questions and problems</h2></div>
+  <table>
+    <tr><th style="width:38%">Question or problem</th><th>Answer</th></tr>
+    <tr><td>I can&rsquo;t sign in.</td><td>Check you tapped your own photo and typed your PIN. After 5 wrong tries, wait 15 minutes. If you forgot your PIN, ask the coordinator for a setup code.</td></tr>
+    <tr><td>The portal signed me out by itself.</td><td>It does this after 20 quiet minutes, or 12 hours after you signed in, to keep records safe. Sign in again; saved work is kept.</td></tr>
+    <tr><td>My note says &ldquo;Not saved yet&rdquo;.</td><td>Stay on the page, check your internet, and tap Save draft.</td></tr>
+    <tr><td>&ldquo;This note was changed elsewhere&rdquo;.</td><td>The note was saved from another device. Copy your new text, reload the page, then paste it back.</td></tr>
+    <tr><td>I can&rsquo;t mark a session as completed.</td><td>The buttons appear once the session time has started.</td></tr>
+    <tr><td>A time I blocked still shows on my public page.</td><td>Wait a minute, then refresh the public page.</td></tr>
+    <tr><td>I made a mistake in a signed note.</td><td>Add an addendum, or mark it as written in error (chapter 8).</td></tr>
+    <tr><td>The portal won&rsquo;t save a new client.</td><td>Check consent is filled in, and that the date of birth is 18 or older. Under-18s should be referred to a child and adolescent service.</td></tr>
+    <tr><td>I lost my phone.</td><td>Tell the coordinator now, and use Sign out on every device from another device.</td></tr>
+    <tr><td>Who can see my notes?</td><td>Only you. The coordinator cannot. Notes are stored encrypted.</td></tr>
+  </table>
+  <div class="callout tip"><strong>Need more help?</strong> Message the practice coordinator.</div>
+</section>
+
+<!-- ============================ 14. QUICK REF ============================ -->
+<section class="chapter">
+  <div class="chapter-head"><span class="num">14</span><h2>Quick reference</h2></div>
+  <table class="quick">
+    <tr><th>I want to...</th><th>Go to, then tap</th></tr>
+    <tr><td>See today&rsquo;s sessions</td><td>Today</td></tr>
+    <tr><td>Join a video session</td><td>Today &rarr; Join</td></tr>
+    <tr><td>Add a video link</td><td>Bookings &rarr; Upcoming &rarr; Add video link</td></tr>
+    <tr><td>Mark a session done or missed</td><td>Bookings &rarr; Past &rarr; Completed / No-show</td></tr>
+    <tr><td>Block a time</td><td>Schedule &rarr; tap the time</td></tr>
+    <tr><td>Take a day off</td><td>Schedule &rarr; Close day</td></tr>
+    <tr><td>Go on leave</td><td>Schedule &rarr; Leave &rarr; Add leave</td></tr>
+    <tr><td>Change my usual hours</td><td>Schedule &rarr; Your usual week</td></tr>
+    <tr><td>Add a client</td><td>Clients &rarr; Add client</td></tr>
+    <tr><td>Write a session note</td><td>Clients &rarr; the client &rarr; Start note</td></tr>
+    <tr><td>Lock a note</td><td>The note &rarr; Sign note</td></tr>
+    <tr><td>Correct a signed note</td><td>The note &rarr; Add addendum</td></tr>
+    <tr><td>Record that I spoke to a client</td><td>The client &rarr; Log contact today</td></tr>
+    <tr><td>See my numbers</td><td>Analytics</td></tr>
+    <tr><td>Update my public page</td><td>Profile &rarr; Send for review</td></tr>
+    <tr><td>Change my PIN</td><td>Settings &rarr; Change PIN</td></tr>
+    <tr><td>Hide client names</td><td>Hide names (top of the screen)</td></tr>
+    <tr><td>Step away safely</td><td>Lock now (top of the screen)</td></tr>
+  </table>
+  <p class="muted" style="margin-top:14pt">Ullidam Clinician Portal &middot; User manual version 1.0 &middot; November 2026. Screens show made-up sample data.</p>
+</section>
+
+</body>
+</html>

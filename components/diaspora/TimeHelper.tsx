@@ -4,7 +4,8 @@ import type { ReactNode } from "react";
 import { ChevronDown } from "lucide-react";
 import { CITIES, KERALA_ZONE, placeForZone } from "@/data/diaspora";
 import { hourLabel, setChoice, useChoice, useEffectiveZone } from "./store";
-import { formatDay, formatTime, instantAt, useTick } from "@/lib/time";
+import { formatDay, formatTime, instantAt } from "@/lib/time";
+import { useTick } from "@/lib/use-time";
 
 const DEFAULT_ZONE = "Asia/Dubai";
 const DEFAULT_HOUR = 20;

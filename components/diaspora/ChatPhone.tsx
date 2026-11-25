@@ -9,7 +9,8 @@ import { WhatsAppLogo } from "@/components/ui/BrandIcons";
 import { placeForZone } from "@/data/diaspora";
 import { THERAPISTS } from "@/data/therapists";
 import { springCalm } from "@/lib/motion";
-import { formatDay, formatTime, IST, instantAt, useTick } from "@/lib/time";
+import { formatDay, formatTime, IST, instantAt } from "@/lib/time";
+import { useTick } from "@/lib/use-time";
 import { useEffectiveZone } from "./store";
 
 const FALLBACK_ZONE = "Asia/Dubai";
